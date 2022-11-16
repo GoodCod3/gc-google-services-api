@@ -2,5 +2,5 @@
 node_modules
 build
 dist
-imputedhours_core.egg-info
+gc_google_services_api.egg-info
 __pycache__
