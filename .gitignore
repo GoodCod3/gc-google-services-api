@@ -1,0 +1,6 @@
+*.pyc
+node_modules
+build
+dist
+imputedhours_core.egg-info
+__pycache__

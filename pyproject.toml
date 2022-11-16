@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "gc_google_services_api"
+version = "0.0.1"
+description = "Python library to use Google services (BigQuery, Google Sheets, Gmail...)"
+authors = ["Jonathan Rodriguez <jonathan.rodriguez@makingscience.com>"]
+license = "GNU"
+readme = "README.rst"
+homepage = "https://github.com/GoodCod3/gc-google-services-api"
+repository = "https://github.com/GoodCod3/gc-google-services-api"
+documentation = "https://github.com/GoodCod3/gc-google-services-api"
+keywords= ["python", "google", "api", "gsheet", "gmail", "bigquery"]
+
+[tool.poetry.dependencies]
+python = ">3.7,<4"
+
+[tool.poetry.dev-dependencies]
+coverage = "*"
+tox = "*"
+codecov = "*"
+flake8 = "*"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
