@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
       - run: python3 -m pip install twine
       - run: python3 setup.py sdist
-      - run: twine upload dist/* -p $(password) -u __token__
+      - run: twine upload  -p $(pypi-api-token) -u __token__ dist/*
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
