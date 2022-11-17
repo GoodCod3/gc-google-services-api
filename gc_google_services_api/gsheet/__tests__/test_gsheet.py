@@ -56,6 +56,6 @@ class TestSuite(unittest.TestCase):
 
         discovery.build().spreadsheets().values().get.assert_called_once_with(
             spreadsheetId=spreadsheet_id,
-            range=spreadsheet_range)
+            range='SHEET_NAME_TEST!SPREADSHEET_RANGE_TEST')
         
         discovery.build().spreadsheets().values().get().execute.assert_called_once()

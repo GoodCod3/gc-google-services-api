@@ -26,5 +26,5 @@ class GSheet(object):
 
         return service.spreadsheets().values().get(
             spreadsheetId=spreadsheet_id,
-            range=spreadsheet_range.format(sheet_name),
+            range='{}!{}'.format(sheet_name, spreadsheet_range),
         ).execute()
