@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: gc-google-services-api
-Version: 0.0.1
+Version: 0.0.3
 Summary: Python library to use Google services (BigQuery, Google Sheets, Gmail...)
 Home-page: https://github.com/GoodCod3/gc-google-services-api
 Author: Jonathan Rodríguez Alejos
