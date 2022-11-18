@@ -100,9 +100,7 @@ credentials_content = os.getenv('SERVICE_ACCOUNT_JSON')
 scope = [
     'https://www.googleapis.com/auth/spreadsheets.readonly',
 ]
-sheet_name = 'Sheet 1'
 spreadsheet_id = '11111111'
-spreadsheet_range = 'A2:B12'
 
 gsheet_api = GSheet(credentials_content, scope)
 result = gsheet_api.get_sheetnames(spreadsheet_id)

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gc_google_services_api"
-version = "0.0.7"
+version = "0.0.8"
 description = "Python library to use Google services (BigQuery, Google Sheets, Gmail...)"
 authors = ["Jonathan Rodriguez <jonathan.rodriguez@makingscience.com>"]
 license = "GNU"
