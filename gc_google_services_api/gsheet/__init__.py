@@ -28,3 +28,13 @@ class GSheet(object):
             spreadsheetId=spreadsheet_id,
             range='{}!{}'.format(sheet_name, spreadsheet_range),
         ).execute()
+
+    def get_sheetnames(self, spreadsheet_id):
+        service = discovery.build(
+            self.api_name,
+            self.api_version,
+            credentials=self._set_credentials())
+
+        return service.spreadsheets().get(
+            spreadsheetId=spreadsheet_id,
+        ).execute()

@@ -40,7 +40,7 @@ for user in users:
 ## Google sheet
 ----------------------------------
 
-### read_gsheet (Method of a class):
+## 1.- **read_gsheet** (Method of a class):
 Allows to read and return the content of a Google sheet link.
 It is necessary to indicate the range of columns that we want to return
 
@@ -82,5 +82,31 @@ gsheet_api = GSheet(credentials_content, scope)
 result = gsheet_api.read_gsheet(sheet_name, spreadsheet_id, spreadsheet_range)
 
 for row in result['values']:
+    print(row)
+```
+
+## 2.-  **get_sheetnames** (Method of a class):
+Get the list of sheetnames given a spreadsheet id.
+
+
+### Usage example
+
+```python
+import os
+from gc_google_services_api.gsheet import GSheet
+
+
+credentials_content = os.getenv('SERVICE_ACCOUNT_JSON')
+scope = [
+    'https://www.googleapis.com/auth/spreadsheets.readonly',
+]
+sheet_name = 'Sheet 1'
+spreadsheet_id = '11111111'
+spreadsheet_range = 'A2:B12'
+
+gsheet_api = GSheet(credentials_content, scope)
+result = gsheet_api.get_sheetnames(spreadsheet_id)
+
+for row in result['sheets']:
     print(row)
 ```
