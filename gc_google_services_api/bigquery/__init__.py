@@ -9,4 +9,5 @@ def execute_query(query="", error_value=[]):
         return query_job.result()
     except Exception as e:
         print('[ERROR]: ', e)
+        print(query)
         return error_value
