@@ -4,8 +4,6 @@ TWINE=twine
 test:
 	${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
 
-build:
-	${PYTHON} setup.py bdist_wheel 
-
 deploy:
+	${PYTHON} setup.py bdist_wheel 
 	${TWINE} upload dist/* 

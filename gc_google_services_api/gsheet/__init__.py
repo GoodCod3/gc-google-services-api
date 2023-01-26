@@ -1,40 +1,57 @@
+import os
+from urllib.error import HTTPError
 from apiclient import discovery
-from google.oauth2 import service_account
+
+from gc_google_services_api.auth import Auth
 
 
 API_NAME = 'sheets'
 API_VERSION = 'v4'
-
+AUTHENTICATION_EMAIL = os.environ.get('AUTHENTICATION_EMAIL', '')
+SCOPES = [
+    'https://www.googleapis.com/auth/spreadsheets'
+]
 
 class GSheet(object):
-    def __init__(self, credentials_content, scopes, api_version=API_VERSION, api_name=API_NAME) -> None:
-        self.credentials_content = credentials_content
-        self.scopes = scopes
-        self.api_version = api_version
-        self.api_name = api_name
-
-    def _set_credentials(self):
-        return service_account.Credentials.from_service_account_info(
-            self.credentials_content,
-            scopes=self.scopes)
+    def __init__(self, subject_email) -> None:
+        self.credentials = Auth(SCOPES, subject_email).get_credentials()
+        self.service = discovery.build(
+            API_NAME, API_VERSION, credentials=self.credentials)
 
     def read_gsheet(self, sheet_name, spreadsheet_id, spreadsheet_range):
-        service = discovery.build(
-            self.api_name,
-            self.api_version,
-            credentials=self._set_credentials())
-
-        return service.spreadsheets().values().get(
+        return self.service.spreadsheets().values().get(
             spreadsheetId=spreadsheet_id,
             range='{}!{}'.format(sheet_name, spreadsheet_range),
         ).execute()
 
     def get_sheetnames(self, spreadsheet_id):
-        service = discovery.build(
-            self.api_name,
-            self.api_version,
-            credentials=self._set_credentials())
-
-        return service.spreadsheets().get(
+        return self.service.spreadsheets().get(
             spreadsheetId=spreadsheet_id,
         ).execute()
+
+    def create_spreadsheet(self, spreadsheet_body):
+        try:
+            spreadsheet = self.service.spreadsheets().create(
+                body=spreadsheet_body,
+                fields='spreadsheetId') \
+                .execute()
+
+            return spreadsheet.get('spreadsheetId')
+        except HTTPError as error:
+            print(f"An error occurred: {error}")
+
+            return error
+
+    def write_in_spreadsheet(self, spreadsheet_id, range_name, body):
+        try:
+            results = self.service.spreadsheets().values().append(
+                spreadsheetId=spreadsheet_id,
+                range=range_name,
+                valueInputOption="USER_ENTERED",
+                body=body).execute()
+
+            return results
+        except HTTPError as error:
+            print(f"An error occurred: {error}")
+
+            return error

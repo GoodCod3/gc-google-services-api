@@ -4,7 +4,7 @@ import os
 from google.oauth2 import service_account
 
 
-CREDENTIALS_BASE64 = os.getenv('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS', '')
+CREDENTIALS_BASE64 = os.environ.get('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS', '')
 
 try:
     CREDENTIALS_CONTENT = json.loads(base64.b64decode(CREDENTIALS_BASE64))

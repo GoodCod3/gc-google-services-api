@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import Mock, patch
 
@@ -23,32 +24,33 @@ class TestSuite(unittest.TestCase):
         return discovery
 
     def _create_service_account_mock(self, service_account):
-        service_account.Credentials.from_service_account_info.return_value = 'CREDENTIALS_TEST'
+        with_subject_mock = Mock()
+        with_subject_mock.with_subject.return_value = 'CREDENTIALS_TEST'
+        service_account.Credentials.from_service_account_info.return_value = with_subject_mock
 
         return service_account
 
     @patch('gc_google_services_api.gsheet.discovery')
-    @patch('gc_google_services_api.gsheet.service_account')
+    @patch('gc_google_services_api.auth.service_account')
     def test_read_gsheet_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):
         discovery = self._create_discovery_mock(discovery)
         service_account = self._create_service_account_mock(service_account)
-
+        
         expected_result = 'RESULT'
-        credentials_content = 'CREDENTIALS_CONTENT_TEST'
         credentials = 'CREDENTIALS_TEST'
-        scope = ['SCOPE_TEST_1']
         sheet_name = 'SHEET_NAME_TEST'
         spreadsheet_id = 'SPREADSHEET_ID_TEST'
         spreadsheet_range = 'SPREADSHEET_RANGE_TEST'
+        subject_email = 'TEST_SUBJECT_EMAIL'
 
-        response = GSheet(credentials_content, scope).read_gsheet(
+        response = GSheet(subject_email).read_gsheet(
             sheet_name, spreadsheet_id, spreadsheet_range)
 
         self.assertEqual(response, expected_result)
 
         service_account.Credentials.from_service_account_info.assert_called_once_with(
-            credentials_content,
-            scopes=scope)
+            '',
+            scopes=['https://www.googleapis.com/auth/spreadsheets'])
 
         discovery.build.assert_called_once_with(
             API_NAME,
@@ -58,29 +60,28 @@ class TestSuite(unittest.TestCase):
         discovery.build().spreadsheets().values().get.assert_called_once_with(
             spreadsheetId=spreadsheet_id,
             range='SHEET_NAME_TEST!SPREADSHEET_RANGE_TEST')
-        
+
         discovery.build().spreadsheets().values().get().execute.assert_called_once()
 
     @patch('gc_google_services_api.gsheet.discovery')
-    @patch('gc_google_services_api.gsheet.service_account')
+    @patch('gc_google_services_api.auth.service_account')
     def test_get_sheetnames_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):
         discovery = self._create_discovery_mock(discovery)
         service_account = self._create_service_account_mock(service_account)
 
         expected_result = 'RESULT'
-        credentials_content = 'CREDENTIALS_CONTENT_TEST'
         credentials = 'CREDENTIALS_TEST'
-        scope = ['SCOPE_TEST_1']
         spreadsheet_id = 'SPREADSHEET_ID_TEST'
+        subject_email = 'TEST_SUBJECT_EMAIL'
 
-        response = GSheet(credentials_content, scope)\
+        response = GSheet(subject_email)\
             .get_sheetnames(spreadsheet_id)
 
         self.assertEqual(response, expected_result)
 
         service_account.Credentials.from_service_account_info.assert_called_once_with(
-            credentials_content,
-            scopes=scope)
+            '',
+            scopes=['https://www.googleapis.com/auth/spreadsheets'])
 
         discovery.build.assert_called_once_with(
             API_NAME,
@@ -89,5 +90,5 @@ class TestSuite(unittest.TestCase):
 
         discovery.build().spreadsheets().get.assert_called_once_with(
             spreadsheetId=spreadsheet_id)
-        
+
         discovery.build().spreadsheets().get().execute.assert_called_once()
