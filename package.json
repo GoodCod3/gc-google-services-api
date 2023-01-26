@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/GoodCod3/gc-google-services-api/issues"
   },
-  "homepage": "https://github.com/GoodCod3/gc-google-services-api#readme"
+  "homepage": "https://github.com/GoodCod3/gc-google-services-api#readme",
+  "dependencies": {
+    "generate-changelog": "^1.8.0"
+  }
 }
