@@ -1,6 +1,6 @@
 {
   "name": "google-services-api",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "scripts": {
     "check-master": "git symbolic-ref --short HEAD | grep ^master$ > /dev/null || (echo \"Not in 'master' branch. Aborting release\"; return 1)",
     "postversion": "git push --follow-tags",
