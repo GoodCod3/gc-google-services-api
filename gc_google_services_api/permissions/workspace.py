@@ -48,6 +48,22 @@ class WorkSpace:
             print("Requesting groups ({})...".format(next_page_token))
             self.get_groups_by_email(email, next_page_token)
 
+    def get_all_groups(self, next_page_token=None):
+        # TODO: Almacenar en una variable todos los grupos
+        results = self.service.groups().list(
+            domain=self.domain,
+            maxResults=200,
+            pageToken=next_page_token,
+        ).execute()
+
+        groups = results.get('groups', EMPTY_ARRAY)
+        self.store_groups(groups)
+
+        next_page_token = results.get('nextPageToken', None)
+        if next_page_token:
+            print("Requesting groups ({})...".format(next_page_token))
+            self.get_all_groups(next_page_token)
+
     def get_members_from_group(self, group_key):
         results = self.service.members().list(groupKey=group_key).execute()
 
