@@ -13,8 +13,8 @@ EMPTY_ARRAY = []
 
 class Drive:
     """
-        Google API documentation: 
-            - https://developers.google.com/drive/api/guides/manage-shareddrives
+        Google API documentation:
+            - https://developers.google.com/drive/api/guides/manage-shareddrives  # noqa: E501
     """
     def __init__(self, subject_email) -> None:
         self.credentials = Auth(SCOPES, subject_email).get_credentials()
@@ -34,7 +34,7 @@ class Drive:
             fileId=file_id,
             useDomainAdminAccess=True,
             supportsAllDrives=True,
-            fields='permissions/id,permissions/displayName,permissions/role,permissions/emailAddress'
+            fields='permissions/id,permissions/displayName,permissions/role,permissions/emailAddress'  # noqa: E501
         ).execute()
 
         return results.get('permissions', EMPTY_ARRAY)

@@ -9,7 +9,7 @@ class TestSuite(unittest.TestCase):
         mock = Mock()
 
         bigquery_client_result_mock = Mock()
-        bigquery_client_result_mock.result.return_value = 'bigquery_query_result'
+        bigquery_client_result_mock.result.return_value = 'bigquery_query_result'  # noqa: E501
 
         bigquery_client_mock = Mock()
         bigquery_client_mock.query.return_value = bigquery_client_result_mock
@@ -18,8 +18,8 @@ class TestSuite(unittest.TestCase):
 
         return mock
 
-    @patch('gc_google_services_api.bigquery.bigquery', new=_create_bigquery_mock())
-    def test_execute_query_method_should_returns_bigquery_results_method_when_query_return_successfully(self):
+    @patch('gc_google_services_api.bigquery.bigquery', new=_create_bigquery_mock())  # noqa: E501
+    def test_execute_query_method_should_returns_bigquery_results_method_when_query_return_successfully(self):  # noqa: E501
         expected_result = 'bigquery_query_result'
         response = execute_query("BIGQUERY_QUERY")
 
