@@ -1,3 +1,5 @@
+[![Publish to PyPI.org](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml/badge.svg)](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml)
+
 Google services API
 =============================
 This repository is a suite that exposes Google services to easily integrate with our project (Big query, Google sheet, Gmail, etc...).
