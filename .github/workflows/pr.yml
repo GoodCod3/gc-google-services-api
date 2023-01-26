@@ -14,11 +14,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Installing flake8
-        run: python3 -m pip install flake8
+      - name: Installing dependencies
+        run: python3 -m pip install -r requirements.txt
       - name: Run Lint
         run: flake8
       - name: Run Tests
-        run: python -m unittest discover gc_google_services_api/ "test_*.py"
+        run: python3 -m unittest discover gc_google_services_api/ "test_*.py"
       - name: Creating build
         run: python3 setup.py sdist
