@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    venv,
+    .env,
+    gc_google_services_api.egg-info/*
+    build/
+    dist/
