@@ -13,8 +13,8 @@ EMPTY_ARRAY = []
 
 class WorkSpace:
     """
-        Google API documentation: 
-            - https://developers.google.com/resources/api-libraries/documentation/admin/directory_v1/python/latest/admin_directory_v1.groups.html
+        Google API documentation:
+            - https://developers.google.com/resources/api-libraries/documentation/admin/directory_v1/python/latest/admin_directory_v1.groups.html # noqa: E501
             - https://googleapis.github.io/google-api-python-client/docs/dyn/admin_directory_v1.users.html
     """
 

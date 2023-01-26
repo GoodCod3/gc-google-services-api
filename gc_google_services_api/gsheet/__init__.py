@@ -12,6 +12,7 @@ SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets'
 ]
 
+
 class GSheet(object):
     def __init__(self, subject_email) -> None:
         self.credentials = Auth(SCOPES, subject_email).get_credentials()

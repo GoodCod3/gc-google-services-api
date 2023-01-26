@@ -1,4 +1,3 @@
-import os
 import unittest
 from unittest.mock import Mock, patch
 
@@ -26,16 +25,16 @@ class TestSuite(unittest.TestCase):
     def _create_service_account_mock(self, service_account):
         with_subject_mock = Mock()
         with_subject_mock.with_subject.return_value = 'CREDENTIALS_TEST'
-        service_account.Credentials.from_service_account_info.return_value = with_subject_mock
+        service_account.Credentials.from_service_account_info.return_value = with_subject_mock  # noqa: E501
 
         return service_account
 
     @patch('gc_google_services_api.gsheet.discovery')
     @patch('gc_google_services_api.auth.service_account')
-    def test_read_gsheet_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):
+    def test_read_gsheet_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):  # noqa: E501
         discovery = self._create_discovery_mock(discovery)
         service_account = self._create_service_account_mock(service_account)
-        
+
         expected_result = 'RESULT'
         credentials = 'CREDENTIALS_TEST'
         sheet_name = 'SHEET_NAME_TEST'
@@ -48,7 +47,7 @@ class TestSuite(unittest.TestCase):
 
         self.assertEqual(response, expected_result)
 
-        service_account.Credentials.from_service_account_info.assert_called_once_with(
+        service_account.Credentials.from_service_account_info.assert_called_once_with(  # noqa: E501
             '',
             scopes=['https://www.googleapis.com/auth/spreadsheets'])
 
@@ -61,11 +60,11 @@ class TestSuite(unittest.TestCase):
             spreadsheetId=spreadsheet_id,
             range='SHEET_NAME_TEST!SPREADSHEET_RANGE_TEST')
 
-        discovery.build().spreadsheets().values().get().execute.assert_called_once()
+        discovery.build().spreadsheets().values().get().execute.assert_called_once()  # noqa: E501
 
     @patch('gc_google_services_api.gsheet.discovery')
     @patch('gc_google_services_api.auth.service_account')
-    def test_get_sheetnames_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):
+    def test_get_sheetnames_should_call_google_api_with_credentials_and_correct_params(self, service_account, discovery):  # noqa: E501
         discovery = self._create_discovery_mock(discovery)
         service_account = self._create_service_account_mock(service_account)
 
@@ -79,7 +78,7 @@ class TestSuite(unittest.TestCase):
 
         self.assertEqual(response, expected_result)
 
-        service_account.Credentials.from_service_account_info.assert_called_once_with(
+        service_account.Credentials.from_service_account_info.assert_called_once_with(  # noqa: E501
             '',
             scopes=['https://www.googleapis.com/auth/spreadsheets'])
 
