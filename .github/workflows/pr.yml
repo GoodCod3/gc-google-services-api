@@ -17,8 +17,8 @@ jobs:
       - name: Installing dependencies
         run: python3 -m pip install -r requirements.txt
       - name: Run Lint
-        run: flake8
+        run: make lint
       - name: Run Tests
-        run: python3 -m unittest discover gc_google_services_api/ "test_*.py"
+        run: make test
       - name: Creating build
         run: python3 setup.py sdist
