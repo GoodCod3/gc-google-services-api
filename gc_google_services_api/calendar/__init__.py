@@ -26,6 +26,7 @@ class Calendar:
         self.resources = []
         self.calendars = []
         self.calendar_events = {}
+
         self._initialize_authentication()
 
     def _initialize_authentication(self):
@@ -46,7 +47,7 @@ class Calendar:
             'admin',
             'directory_v1',
             credentials=self.credentials_directory)
-    
+
     def get_all_resources(self):
         result = self.service_directory.resources().calendars().list(
             customer='my_customer'
