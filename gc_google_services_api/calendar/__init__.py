@@ -79,7 +79,7 @@ class Calendar:
         for event in result['items']:
             if event['status'] != 'cancelled':
                 try:
-                    if self.filterByCreator and event['creator']['email'] == self.filterByCreator:
+                    if self.filterByCreator and event['creator']['email'] == self.filterByCreator:  # noqa: E501
                         if self.maxDate:
                             event_enddate = datetime.strptime(
                                 event['end']['dateTime'],

@@ -12,37 +12,38 @@ class TestSuite(unittest.TestCase):
         self.end_date = datetime.today() + timedelta(days=1)
         self.filterByCreator = 'test@test.com'
 
+    def _create_Auth_mock(self, Auth):
+        auth_mock = Mock()
+        auth_mock.get_credentials.return_value = 'CREDENTIALS'
+
+        Auth.return_value = auth_mock
+
+        return Auth
+
     def _create_build_mock(self, build):
-        build.return_value = 'build_service'
+        build.Credentials.from_service_account_info.return_value = 'CREDENTIALS'  # noqa: E501
 
         return build
 
-    def _create_service_account_mock(self, service_account):
-        service_account.Credentials.from_service_account_info.return_value = 'CREDENTIALS'  # noqa: E501
-
-        return service_account
-
+    @patch('gc_google_services_api.calendar.Auth')
     @patch('gc_google_services_api.calendar.build')
-    @patch('gc_google_services_api.auth.service_account')
-    def test_calendar_constructor_should_initialize_authentication(self, service_account, build):  # noqa: E501
-        self._create_build_mock(build)
-        service_account = self._create_service_account_mock(service_account)
+    def test_calendar_constructor_should_initialize_authentication(self, build, Auth):  # noqa: E501
+        Auth = self._create_Auth_mock(Auth)
+        build = self._create_build_mock(build)
 
         Calendar(self.start_date, self.end_date, self.filterByCreator)
 
-        service_account.Credentials.from_service_account_info.assert_has_calls(
+        Auth.assert_has_calls(
             [
-                call('',
-                     scopes=[
-                         'https://www.googleapis.com/auth/calendar.readonly',
-                         'https://www.googleapis.com/auth/calendar.events'
-                     ])
+                call([
+                    'https://www.googleapis.com/auth/calendar.readonly',
+                    'https://www.googleapis.com/auth/calendar.events'
+                ], '')
             ],
             [
-                call('',
-                     scopes=[
-                         'https://www.googleapis.com/auth/admin.directory.resource.calendar',
-                     ])
+                call([
+                    'https://www.googleapis.com/auth/admin.directory.resource.calendar',  # noqa: E501
+                ], '')
             ],
         )
 
