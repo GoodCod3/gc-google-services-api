@@ -15,7 +15,7 @@ SCOPES = [
 SCOPES_DIRECTORY = [
     'https://www.googleapis.com/auth/admin.directory.resource.calendar'
 ]
-CREDENTIALS_BASE64 = os.getenv('AUTHENTICATION_EMAIL', '')
+AUTHENTICATION_EMAIL = os.getenv('AUTHENTICATION_EMAIL', '')
 
 
 class Calendar:
@@ -32,11 +32,11 @@ class Calendar:
     def _initialize_authentication(self):
         self.credentials = Auth(
             SCOPES,
-            CREDENTIALS_BASE64
+            AUTHENTICATION_EMAIL
         ).get_credentials()
         self.credentials_directory = Auth(
             SCOPES_DIRECTORY,
-            CREDENTIALS_BASE64
+            AUTHENTICATION_EMAIL
         ).get_credentials()
 
         self.service_calendar = build(

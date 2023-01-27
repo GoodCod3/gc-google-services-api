@@ -110,3 +110,63 @@ result = gsheet_api.get_sheetnames(spreadsheet_id)
 for row in result['sheets']:
     print(row)
 ```
+
+## Gmail
+----------------------------------
+Send emails with Gmail API.
+
+This module needs to have configured an environment variable called `AUTHENTICATION_EMAIL` that will be the email used as sender.
+
+### Usage example
+
+```python
+import os
+from gc_google_services_api.gmail import Gmail
+
+
+gmail_api = Gmail('subject-email@test.com')
+gmail_api.send_email(
+    'email message',
+    'email title',
+    ['to_email1@gmail.com'],
+)
+```
+
+## Calendar
+----------------------------------
+Get calendars info and events.
+
+This module needs to have configured an environment variable called `AUTHENTICATION_EMAIL` that will be the email used to authenticate with Google services.
+
+### Usage example
+
+```python
+import os
+from datetime import datetime, timedelta
+from gc_google_services_api.calenda_api import Calendar
+
+
+start_date = datetime.today()
+end_date = datetime.today() + timedelta(days=1)
+creator = 'test@test.com'
+
+calendar_api = Calendar(start_date, end_date, creator)
+
+# Getting calendar resources
+resources = calendar_api.get_all_resources()
+print(resources)
+
+# Getting calendars
+calendar_api.request_calendars()
+print(calendar_api.calendars)
+
+# Getting events from a calendar
+calendar_id = '1'
+calendar_api.request_calendar_events(calendar_id)
+print(calendar_api.calendar_events)
+
+# Delete calendar event
+calendar_id = '1'
+event_id = '2'
+calendar_api.remove_event(calendar_id, event_id)
+```
