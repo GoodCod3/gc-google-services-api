@@ -68,19 +68,14 @@ the format of the service account should be something like this:
 ### Usage example
 
 ```python
-import os
 from gc_google_services_api.gsheet import GSheet
 
 
-credentials_content = os.getenv('SERVICE_ACCOUNT_JSON')
-scope = [
-    'https://www.googleapis.com/auth/spreadsheets.readonly',
-]
-sheet_name = 'Sheet 1'
+name = 'Sheet 1'
 spreadsheet_id = '11111111'
 spreadsheet_range = 'A2:B12'
 
-gsheet_api = GSheet(credentials_content, scope)
+gsheet_api = GSheet('subject_email@test.com')
 result = gsheet_api.read_gsheet(sheet_name, spreadsheet_id, spreadsheet_range)
 
 for row in result['values']:
@@ -94,17 +89,12 @@ Get the list of sheetnames given a spreadsheet id.
 ### Usage example
 
 ```python
-import os
 from gc_google_services_api.gsheet import GSheet
 
 
-credentials_content = os.getenv('SERVICE_ACCOUNT_JSON')
-scope = [
-    'https://www.googleapis.com/auth/spreadsheets.readonly',
-]
 spreadsheet_id = '11111111'
 
-gsheet_api = GSheet(credentials_content, scope)
+gsheet_api = GSheet('subject_email@test.com')
 result = gsheet_api.get_sheetnames(spreadsheet_id)
 
 for row in result['sheets']:
