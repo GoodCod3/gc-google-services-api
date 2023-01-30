@@ -11,15 +11,16 @@ package_json_content = Path(package_json_path).read_text()
 current_version = json.loads(package_json_content)['version']
 
 packages = find_packages()
-packages.extend([package_json_path])
+packages.extend(['package'])
 
-setup(
-    name='gc_google_services_api',
-    version=current_version,
-    packages=packages,
-    author='Jonathan Rodriguez Alejos',
-    author_email='jrodriguez.5716@gmail.com',
-    install_requires=open('requirements.txt').read().splitlines(),
-    long_description=long_description,
-    long_description_content_type='text/markdown'
-)
+
+# setup(
+#     name='gc_google_services_api',
+#     version=current_version,
+#     packages=packages,
+#     author='Jonathan Rodriguez Alejos',
+#     author_email='jrodriguez.5716@gmail.com',
+#     install_requires=open('requirements.txt').read().splitlines(),
+#     long_description=long_description,
+#     long_description_content_type='text/markdown'
+# )
