@@ -10,14 +10,12 @@ package_json_path = f"{this_directory}/package.json"
 package_json_content = Path(package_json_path).read_text()
 current_version = json.loads(package_json_content)['version']
 
-packages = find_packages()
-packages.extend(['package'])
-
-
 setup(
     name='gc_google_services_api',
     version=current_version,
-    packages=packages,
+    packages=find_packages(),
+    data_files=[('package', ['*.json'])],
+
     author='Jonathan Rodriguez Alejos',
     author_email='jrodriguez.5716@gmail.com',
     install_requires=open('requirements.txt').read().splitlines(),
