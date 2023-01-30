@@ -14,7 +14,7 @@ setup(
     name='gc_google_services_api',
     version=current_version,
     packages=find_packages(),
-    data_files=[('package', ['*.json'])],
+    data_files=[('gc_google_services_api', ['*.json'])],
 
     author='Jonathan Rodriguez Alejos',
     author_email='jrodriguez.5716@gmail.com',
