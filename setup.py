@@ -11,7 +11,7 @@ package_json_content = Path(package_json_path).read_text()
 current_version = json.loads(package_json_content)['version']
 
 packages = find_packages()
-packages.extend(['package.json', 'package-lock.json'])
+packages.extend([package_json_path])
 
 setup(
     name='gc_google_services_api',
