@@ -4,6 +4,7 @@ import base64
 import os
 
 from email.message import EmailMessage
+from email.mime.text import MIMEText
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -17,19 +18,28 @@ SCOPES = [
 
 
 class Gmail:
-    def __init__(self, subject_email) -> None:
+    def __init__(self, subject_email, type='raw') -> None:
+        self.message_type = type
         self.credentials = Auth(SCOPES, subject_email).get_credentials()
         self.service = build('gmail', 'v1', credentials=self.credentials)
 
     def send_email(self, email_message, email_subject, to=[]):
-        try:
-            message = EmailMessage()
+        def _create_message():
+            if self.message_type == 'raw':
+                message = EmailMessage()
 
-            message.set_content(email_message)
+                message.set_content(email_message)
+            else:
+                message = MIMEText(email_message, 'html')
 
             message['to'] = to
             message['from'] = AUTHENTICATION_EMAIL
             message['subject'] = email_subject
+
+            return message
+        
+        try:
+            message = _create_message()
 
             # encoded message
             encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
@@ -38,10 +48,11 @@ class Gmail:
             create_message = {
                 'raw': encoded_message
             }
-            send_message = (self.service.users().messages().send
-                            (userId='me', body=create_message).execute())
+            send_message = (self.service.users().messages().send(
+                userId='me', 
+                body=create_message).execute())
         except HttpError as error:
-            print(F'An error occurred: {error}')
+            print(f'An error occurred: {error}')
             send_message = None
 
         return send_message
