@@ -14,7 +14,7 @@ SCOPES = [
 
 
 class GSheet(object):
-    def __init__(self, subject_email) -> None:
+    def __init__(self, subject_email=None) -> None:
         self.credentials = Auth(SCOPES, subject_email).get_credentials()
         self.service = discovery.build(
             API_NAME, API_VERSION, credentials=self.credentials)
