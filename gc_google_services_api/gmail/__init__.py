@@ -37,7 +37,7 @@ class Gmail:
             message['subject'] = email_subject
 
             return message
-        
+
         try:
             message = _create_message()
 
@@ -49,7 +49,7 @@ class Gmail:
                 'raw': encoded_message
             }
             send_message = (self.service.users().messages().send(
-                userId='me', 
+                userId='me',
                 body=create_message).execute())
         except HttpError as error:
             print(f'An error occurred: {error}')

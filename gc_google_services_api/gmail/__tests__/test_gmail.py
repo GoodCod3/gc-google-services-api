@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 from gc_google_services_api.gmail import Gmail
 
@@ -30,7 +30,6 @@ class TestSuite(unittest.TestCase):
 
         return service_account
 
-        
     @patch('gc_google_services_api.gmail.build')
     @patch('gc_google_services_api.auth.service_account')
     def test_gmail_call_auth_when_instance_is_created(self, service_account, build):  # noqa: E501
