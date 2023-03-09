@@ -1,9 +1,9 @@
 import os
 from datetime import datetime
+
 from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
-
 
 DEFAULT_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S+01:00"
 DEFAULT_MIN_DATE_TIME_FORMAT = "%Y-%m-%dT00:00:00+01:00"

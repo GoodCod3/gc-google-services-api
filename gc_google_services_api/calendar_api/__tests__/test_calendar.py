@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import Mock, patch, call
 from datetime import datetime, timedelta
+from unittest.mock import Mock, call, patch
 
 from gc_google_services_api.calendar_api import Calendar
 

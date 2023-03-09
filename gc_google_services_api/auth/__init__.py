@@ -1,8 +1,8 @@
 import base64
 import json
 import os
-from google.oauth2 import service_account
 
+from google.oauth2 import service_account
 
 CREDENTIALS_BASE64 = os.environ.get('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS', '')
 
