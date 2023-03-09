@@ -1,5 +1,0 @@
-include README.md
-include LICENSE
-include package.json
-include requirements.txt
-recursive-include gc-google-services-api *
