@@ -16,15 +16,19 @@ jobs:
           fetch-depth: 0
       - name: Install Poetry
         uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
 
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
       - name: Run Lint
-        run: make lint
+        run: source .venv/bin/activate && make lint
 
       - name: Run Tests
-        run: make test
-        
+        run: source .venv/bin/activate && make test
+
       - name: Creating build
         run: python3 setup.py sdist
