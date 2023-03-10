@@ -1,8 +1,8 @@
 import time
+
 from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
-
 
 SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets',

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from gc_google_services_api.gsheet import GSheet, API_NAME, API_VERSION
+from gc_google_services_api.gsheet import API_NAME, API_VERSION, GSheet
 
 
 class TestSuite(unittest.TestCase):

@@ -2,7 +2,6 @@ from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
 
-
 SCOPES = [
     'https://www.googleapis.com/auth/admin.directory.group',
     'https://www.googleapis.com/auth/admin.directory.user',
