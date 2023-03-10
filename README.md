@@ -1,5 +1,17 @@
 [![Publish to PyPI.org](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml/badge.svg)](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml)
 
+# How to contribute
+After clone repository
+## 1.- Install dependencies
+```bash
+poetry install
+```
+
+## 2.- Run test
+```bash
+make test
+```
+
 Google services API
 =============================
 This repository is a suite that exposes Google services to easily integrate with our project (Big query, Google sheet, Gmail, etc...).
