@@ -9,3 +9,9 @@ lint:
 
 lint-fix:
 	isort .
+
+version:
+	poetry version $(version)
+	git commit -am "Release $(version)"
+	git tag $(version)
+	git push --follow-tags
