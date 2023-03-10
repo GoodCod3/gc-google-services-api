@@ -6,6 +6,7 @@ exclude =
     *.py[co],
     __pycache__,
     venv,
+    .venv,
     .env,
     gc_google_services_api.egg-info/*
     build/
