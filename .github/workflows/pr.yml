@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Installing dependencies
-        run: python3 -m pip install -r requirements.txt
+        run: poetry install
       - name: Run Lint
         run: make lint
       - name: Run Tests
