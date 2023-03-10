@@ -9,7 +9,3 @@ lint:
 
 lint-fix:
 	isort .
-
-deploy:
-	${PYTHON} setup.py bdist_wheel 
-	${TWINE} upload dist/* 
