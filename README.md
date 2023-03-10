@@ -12,6 +12,16 @@ poetry install
 make test
 ```
 
+# Publish new version
+When your Pull Request is approved and merged with master, then to can generate new version running the next command:
+
+```bash
+poetry version X.Y.Z <-- (New version)
+git commit -am "Release vX.Y.Z"
+git tag vX.Y.Z
+git push --follow-tags
+```
+
 Google services API
 =============================
 This repository is a suite that exposes Google services to easily integrate with our project (Big query, Google sheet, Gmail, etc...).
