@@ -1,0 +1,60 @@
+image: python:3.8
+options:
+  docker: true
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Test and lint
+          caches:
+            - "pip"
+          script:
+            - apt-get update && apt-get install -y make
+            - pip install poetry
+            - poetry install
+            - make lint
+            - make isort
+            - make test
+
+  pull-requests:
+    "**":
+      - step:
+          name: Test and lint
+          caches:
+            - "pip"
+          script:
+            - apt-get update && apt-get install -y make
+            - pip install poetry
+            - poetry install
+            - poetry self add keyrings.google-artifactregistry-auth
+            - make lint
+            - make isort
+            - make test
+  tags:
+    "v*.*.*":
+      - step:
+          name: Checking quality gates
+          caches:
+            - "pip"
+          script:
+            - apt-get update && apt-get install -y make
+            - pip install poetry
+            - poetry install
+            - make lint
+            - make isort
+            - make test
+      - step:
+          name: Publishing
+          deployment: production
+          image: google/cloud-sdk:latest
+          caches:
+            - docker
+            - "pip"
+          script:
+            - curl -sSL https://install.python-poetry.org | python3 -
+            - echo "$GOOGLE_SERVICE_ACCOUNT_CREDENTIALS" | base64 -d > credentials.json
+            - gcloud auth activate-service-account bitbucket-pipelines@ms--tiber-com-lib--pro--8bd7.iam.gserviceaccount.com --key-file=credentials.json --project=ms--tiber-com-lib--pro--8bd7 --project ms--tiber-com-lib--pro--8bd7
+            - /root/.local/bin/poetry self add keyrings.google-artifactregistry-auth
+            - /root/.local/bin/poetry build
+            - /root/.local/bin/poetry publish -r syscorp-librarian

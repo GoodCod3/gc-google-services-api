@@ -16,6 +16,10 @@ make test
 When your Pull Request is approved and merged with master, then to can generate new version running the next command:
 
 ```bash
+make v=X.Y.Z release 
+```
+or you can execute
+```bash
 poetry version X.Y.Z <-- (New version)
 git commit -am "Release vX.Y.Z"
 git tag vX.Y.Z
