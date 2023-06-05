@@ -6,6 +6,7 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 def execute_query(query="", error_value=[]):
     """
     DEPRECATED: Now use BigQueryManager class instead this method.
@@ -31,7 +32,8 @@ class BigQueryManager:
         def _parse_schemas():
             schema_fields = []
             for field_name, field_type in schema.items():
-                schema_fields.append(bigquery.SchemaField(field_name, field_type))
+                schema_fields.append(
+                    bigquery.SchemaField(field_name, field_type))
 
             return schema_fields
 
