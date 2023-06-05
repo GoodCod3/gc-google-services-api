@@ -16,7 +16,7 @@ make test
 When your Pull Request is approved and merged with master, then to can generate new version running the next command:
 
 ```bash
-make v=X.Y.Z release 
+make v=X.Y.Z release
 ```
 or you can execute
 ```bash

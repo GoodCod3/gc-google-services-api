@@ -4,13 +4,13 @@ import os
 
 from google.oauth2 import service_account
 
-CREDENTIALS_BASE64 = os.environ.get('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS', '')
+CREDENTIALS_BASE64 = os.environ.get("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS", "")
 
 try:
     CREDENTIALS_CONTENT = json.loads(base64.b64decode(CREDENTIALS_BASE64))
 except json.JSONDecodeError as e:
-    print('[ERROR CREDENTIALS_CONTENT]: ', e)
-    CREDENTIALS_CONTENT = ''
+    print("[ERROR CREDENTIALS_CONTENT]: ", e)
+    CREDENTIALS_CONTENT = ""
 
 
 class Auth:
@@ -20,8 +20,8 @@ class Auth:
 
     def get_credentials(self):
         credentials = service_account.Credentials.from_service_account_info(
-            CREDENTIALS_CONTENT,
-            scopes=self.scopes)
+            CREDENTIALS_CONTENT, scopes=self.scopes
+        )
 
         if self.subject_email:
             credentials = credentials.with_subject(self.subject_email)

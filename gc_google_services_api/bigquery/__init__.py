@@ -1,6 +1,7 @@
 import logging
-from google.cloud import bigquery
+
 from google.api_core.exceptions import NotFound
+from google.cloud import bigquery
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -17,7 +18,7 @@ def execute_query(query="", error_value=[]):
     try:
         return query_job.result()
     except Exception as e:
-        print('[ERROR]: ', e)
+        print("[ERROR]: ", e)
         return error_value
 
 
@@ -33,13 +34,17 @@ class BigQueryManager:
             schema_fields = []
             for field_name, field_type in schema.items():
                 schema_fields.append(
-                    bigquery.SchemaField(field_name, field_type))
+                    bigquery.SchemaField(
+                        field_name,
+                        field_type,
+                    )
+                )
 
             return schema_fields
 
         try:
             self.client.get_table(
-                f"{self.project_id}.{self.dataset_id}.{table_id}"
+                f"{self.project_id}.{self.dataset_id}.{table_id}",
             )
         except NotFound:
             table_ref = self.client.dataset(self.dataset_id).table(table_id)

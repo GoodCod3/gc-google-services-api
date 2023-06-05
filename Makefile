@@ -1,15 +1,22 @@
 PYTHON=python
-TWINE=twine
 
 test:
 	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
 
 lint:
-	flake8
+	poetry run flake8 gc_google_services_api/
 
-lint-fix:
-	isort .
+isort:
+	poetry run  isort . --check-only
 
+isort-fix:
+	poetry run  isort .
+
+pre-commit:
+	pre-commit run --all-files
+
+freeze-dependencies:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 release-major:
 	@poetry version major && \
