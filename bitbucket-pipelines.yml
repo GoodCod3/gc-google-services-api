@@ -26,8 +26,8 @@ pipelines:
           script:
             - apt-get update && apt-get install -y make
             - pip install poetry
-            - poetry install
             - poetry self add keyrings.google-artifactregistry-auth
+            - poetry install
             - make lint
             - make isort
             - make test
