@@ -5,11 +5,10 @@ test:
 	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
 
 lint:
-	flake8
+	poetry run flake8
 
 lint-fix:
 	isort .
-
 
 release-major:
 	@poetry version major && \
