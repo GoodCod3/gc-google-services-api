@@ -10,31 +10,31 @@ from googleapiclient.errors import HttpError
 
 from gc_google_services_api.auth import Auth
 
-AUTHENTICATION_EMAIL = os.getenv('AUTHENTICATION_EMAIL', '')
+AUTHENTICATION_EMAIL = os.getenv("AUTHENTICATION_EMAIL", "")
 
 SCOPES = [
-    'https://www.googleapis.com/auth/gmail.send',
+    "https://www.googleapis.com/auth/gmail.send",
 ]
 
 
 class Gmail:
-    def __init__(self, subject_email, type='raw') -> None:
+    def __init__(self, subject_email, type="raw") -> None:
         self.message_type = type
         self.credentials = Auth(SCOPES, subject_email).get_credentials()
-        self.service = build('gmail', 'v1', credentials=self.credentials)
+        self.service = build("gmail", "v1", credentials=self.credentials)
 
     def send_email(self, email_message, email_subject, to=[]):
         def _create_message():
-            if self.message_type == 'raw':
+            if self.message_type == "raw":
                 message = EmailMessage()
 
                 message.set_content(email_message)
             else:
-                message = MIMEText(email_message, 'html')
+                message = MIMEText(email_message, "html")
 
-            message['to'] = to
-            message['from'] = AUTHENTICATION_EMAIL
-            message['subject'] = email_subject
+            message["to"] = to
+            message["from"] = AUTHENTICATION_EMAIL
+            message["subject"] = email_subject
 
             return message
 
@@ -42,17 +42,19 @@ class Gmail:
             message = _create_message()
 
             # encoded message
-            encoded_message = base64.urlsafe_b64encode(message.as_bytes()) \
-                .decode()
+            encoded_message = base64.urlsafe_b64encode(
+                message.as_bytes(),
+            ).decode()
 
-            create_message = {
-                'raw': encoded_message
-            }
-            send_message = (self.service.users().messages().send(
-                userId='me',
-                body=create_message).execute())
+            create_message = {"raw": encoded_message}
+            send_message = (
+                self.service.users()
+                .messages()
+                .send(userId="me", body=create_message)
+                .execute()
+            )
         except HttpError as error:
-            print(f'An error occurred: {error}')
+            print(f"An error occurred: {error}")
             send_message = None
 
         return send_message

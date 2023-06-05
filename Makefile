@@ -1,17 +1,22 @@
 PYTHON=python
-TWINE=twine
 
 test:
-	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
+	poetry run ${PYTHON} -m unittest discover ms_salesforce_api/ "test_*.py"
 
 lint:
-	poetry run flake8
+	poetry run flake8 gc_google_services_api/
 
 isort:
 	poetry run  isort . --check-only
 
-lint-fix:
-	isort .
+isort-fix:
+	poetry run  isort .
+
+pre-commit:
+	pre-commit run --all-files
+
+freeze-dependencies:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 release-major:
 	@poetry version major && \
