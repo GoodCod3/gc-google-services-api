@@ -1,7 +1,7 @@
 PYTHON=python
 
 test:
-	poetry run ${PYTHON} -m unittest discover ms_salesforce_api/ "test_*.py"
+	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
 
 lint:
 	poetry run flake8 gc_google_services_api/
