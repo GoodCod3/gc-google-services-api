@@ -7,6 +7,9 @@ test:
 lint:
 	poetry run flake8
 
+isort:
+	poetry run  isort . --check-only
+
 lint-fix:
 	isort .
 
