@@ -9,6 +9,11 @@ logging.basicConfig(
 )
 
 
+def wait_for_job(query_job):
+    retry = Retry()
+    retry(query_job.result)
+
+
 def execute_query(query="", error_value=[]):
     """
     DEPRECATED: Now use BigQueryManager class instead this method.
@@ -17,6 +22,7 @@ def execute_query(query="", error_value=[]):
     query_job = client.query(query)
 
     try:
+        wait_for_job(query_job)
         return query_job.result()
     except Exception as e:
         print("[ERROR]: ", e)
