@@ -80,16 +80,15 @@ class BigQueryManager:
         table_ref = self.client.dataset(self.dataset_id).table(table_name)
 
         load_job = self.client.load_table_from_json(
-            json_rows=rows_to_insert,
-            destination=table_ref,
-            job_config=job_config)
+            json_rows=rows_to_insert, destination=table_ref, job_config=job_config
+        )
 
         load_job.result()
         is_process_complete = load_job.state == "DONE"
-        
+
         if is_process_complete:
             logging.info("Load batch data successfully.")
         else:
             logging.error("Error loading data:", load_job.errors)
-        
+
         return is_process_complete

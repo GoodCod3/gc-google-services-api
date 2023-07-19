@@ -17,7 +17,9 @@ class AuthTestSuite(unittest.TestCase):
 
     def _create_service_account_with_subject_mock(self, service_account):
         with_subject_mock = Mock()
-        with_subject_mock.with_subject.return_value = "CREDENTIALS_WITH_SUBJECT"  # noqa: E501
+        with_subject_mock.with_subject.return_value = (
+            "CREDENTIALS_WITH_SUBJECT"  # noqa: E501
+        )
         from_service_account_info_mock = Mock()
         from_service_account_info_mock.from_service_account_info.return_value = (  # noqa: E501
             with_subject_mock
