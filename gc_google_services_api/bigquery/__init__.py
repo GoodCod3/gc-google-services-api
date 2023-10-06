@@ -25,7 +25,7 @@ def execute_query(query="", error_value=[]):
         wait_for_job(query_job)
         return query_job.result()
     except Exception as e:
-        logging.error(f"[ERROR - (deprecated) execute_query]: {e} with query: {query}")
+        logging.error(f"[ERROR - (deprecated) execute_query]: {e} with query: {query}")  # noqa: E501
         return error_value
 
 
