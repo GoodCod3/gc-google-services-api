@@ -25,7 +25,7 @@ def execute_query(query="", error_value=[]):
         wait_for_job(query_job)
         return query_job.result()
     except Exception as e:
-        print("[ERROR]: ", e)
+        logging.error(f"[ERROR - (deprecated) execute_query]: {e} with query: {query}")  # noqa: E501
         return error_value
 
 
@@ -70,7 +70,7 @@ class BigQueryManager:
 
             return query_job.result()
         except Exception as e:
-            logging.error(f"[ERROR - execute_query]: {e}")
+            logging.error(f"[ERROR - execute_query]: {e} with query: {query}")
             return error_value
 
     def load_massive_data(self, rows_to_insert, table_name):
