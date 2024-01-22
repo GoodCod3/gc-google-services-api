@@ -25,8 +25,38 @@ def execute_query(query="", error_value=[]):
         wait_for_job(query_job)
         return query_job.result()
     except Exception as e:
-        logging.error(f"[ERROR - (deprecated) execute_query]: {e} with query: {query}")  # noqa: E501
+        logging.error(
+            f"[ERROR - (deprecated) execute_query]: {e} with query: {query}"
+        )  # noqa: E501
         return error_value
+
+
+def insert_batch(
+    rows_to_insert=[], project_id="", dataset_id="", table_name=""
+):  # noqa: E501
+    """
+    DEPRECATED: Now use BigQueryManager class instead this method.
+    """
+    client = bigquery.Client()
+    job_config = bigquery.LoadJobConfig()
+    job_config.write_disposition = bigquery.WriteDisposition.WRITE_APPEND
+
+    table_ref = client.dataset(dataset_id, project_id).table(table_name)
+    load_job = client.load_table_from_json(
+        json_rows=rows_to_insert,
+        destination=table_ref,
+        job_config=job_config,
+    )
+
+    load_job.result()
+    is_process_complete = load_job.state == "DONE"
+
+    if is_process_complete:
+        logging.info("Load batch data successfully.")
+    else:
+        logging.error("Error loading data:", load_job.errors)
+
+    return is_process_complete
 
 
 class BigQueryManager:
