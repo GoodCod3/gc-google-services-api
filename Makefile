@@ -3,6 +3,9 @@ PYTHON=python
 test:
 	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_*.py"
 
+test-unique:
+	poetry run ${PYTHON} -m unittest discover gc_google_services_api/ "test_pubsub.py"
+
 lint:
 	poetry run flake8 gc_google_services_api/
 
