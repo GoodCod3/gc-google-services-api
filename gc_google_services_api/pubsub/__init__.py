@@ -1,30 +1,29 @@
+import base64
 import json
 import logging
+import os
 import time
 import uuid
 from typing import Callable
 
 from google.cloud import pubsub_v1
-from google.auth import impersonated_credentials
-from google.auth.transport import requests
-
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
+PUBSUB_PROJECT = os.getenv("PUBSUB_PROJECT")
+GOOGLE_SERVICE_ACCOUNT_CREDENTIALS = json.loads(
+    base64.b64decode(os.getenv("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS"))
+)
 MAX_SIMULTANEOUS_MESSAGES = 1
 TIME_TO_WAIT_BETWEEN_MESSAGES = 10  # Seconds
 DEFAULT_TIMEOUT_FOR_ANY_MESSAGE = 6 * 60  # 6 minutes
 
 
 class PubSub:
-    def __init__(self, project, service_account_email):
-        self.project = project
-        self.service_account_email = service_account_email
-
-        self.credentials = self._get_impersonated_credentials()
+    def __init__(self):
         self.publisher = pubsub_v1.PublisherClient.from_service_account_info(
             info=GOOGLE_SERVICE_ACCOUNT_CREDENTIALS,
         )
@@ -32,22 +31,13 @@ class PubSub:
             info=GOOGLE_SERVICE_ACCOUNT_CREDENTIALS,
         )
 
-    def _get_impersonated_credentials(self):
-        target_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-        target_credentials = impersonated_credentials.Credentials(
-            source_credentials=requests.Request(),
-            target_principal=self.service_account_email,
-            target_scopes=target_scopes,
-        )
-        return target_credentials
-    
     def send_message(self, topic_name: str, data: dict):
-        topic_path = self.publisher.topic_path(self.project, topic_name)
+        topic_path = self.publisher.topic_path(PUBSUB_PROJECT, topic_name)
         self.publisher.publish(
             topic_path,
             json.dumps(
                 {
-                    "data": data,
+                    "projects": data,
                     "id": str(uuid.uuid4()),
                 }
             ).encode("utf-8"),
@@ -67,7 +57,7 @@ class PubSub:
 
     def subscribe_topic(self, topic_name: str, callback: Callable[[], str]):
         subscription_path = self.subscriber.subscription_path(
-            self.project,
+            PUBSUB_PROJECT,
             f"{topic_name}-sub",
         )
 
