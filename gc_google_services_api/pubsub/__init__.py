@@ -1,7 +1,6 @@
 import base64
 import json
 import logging
-import os
 import time
 import uuid
 from typing import Callable
@@ -13,26 +12,19 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-PUBSUB_PROJECT = os.getenv("PUBSUB_PROJECT")
-GOOGLE_SERVICE_ACCOUNT_CREDENTIALS = json.loads(
-    base64.b64decode(os.getenv("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS"))
-)
-MAX_SIMULTANEOUS_MESSAGES = 1
-TIME_TO_WAIT_BETWEEN_MESSAGES = 10  # Seconds
-DEFAULT_TIMEOUT_FOR_ANY_MESSAGE = 6 * 60  # 6 minutes
-
 
 class PubSub:
-    def __init__(self):
+    def __init__(self, credentials: str, project: str):
         self.publisher = pubsub_v1.PublisherClient.from_service_account_info(
-            info=GOOGLE_SERVICE_ACCOUNT_CREDENTIALS,
+            info=credentials,
         )
         self.subscriber = pubsub_v1.SubscriberClient.from_service_account_info(
-            info=GOOGLE_SERVICE_ACCOUNT_CREDENTIALS,
+            info=credentials,
         )
+        self.project = project
 
     def send_message(self, topic_name: str, data: dict):
-        topic_path = self.publisher.topic_path(PUBSUB_PROJECT, topic_name)
+        topic_path = self.publisher.topic_path(self.project, topic_name)
         self.publisher.publish(
             topic_path,
             json.dumps(
@@ -55,26 +47,35 @@ class PubSub:
             ack_ids=[ack_id],
         )
 
-    def subscribe_topic(self, topic_name: str, callback: Callable[[], str]):
+    def subscribe_topic(
+        self,
+        topic_name: str,
+        callback: Callable[[], str],
+        max_simultaneous_messages: int = 1,
+        time_to_wait_between_messages: int = 10,
+        default_timeout_for_any_message: int = 6 * 60,
+    ):
         subscription_path = self.subscriber.subscription_path(
-            PUBSUB_PROJECT,
+            self.project,
             f"{topic_name}-sub",
         )
 
         request = pubsub_v1.types.PullRequest(
             subscription=subscription_path,
-            max_messages=MAX_SIMULTANEOUS_MESSAGES,
+            max_messages=max_simultaneous_messages,
         )
 
         while True:
             try:
                 response = self.subscriber.pull(
                     request=request,
-                    timeout=DEFAULT_TIMEOUT_FOR_ANY_MESSAGE,
+                    timeout=default_timeout_for_any_message,
                 )
 
                 if not response.received_messages:
-                    logging.error("Closing the subscription to the topic due to lack of messages")
+                    logging.error(
+                        "Closing the subscription to the topic due to lack of messages"
+                    )
                     break
                 else:
                     for received_message in response.received_messages:
@@ -90,7 +91,7 @@ class PubSub:
                         callback(message_data)
 
                         logging.info(f"Message ({batch_message_id}) processed.")
-                        time.sleep(TIME_TO_WAIT_BETWEEN_MESSAGES)
+                        time.sleep(time_to_wait_between_messages)
                         self.terminate_message(
                             ack_id=message_id,
                             message_id=batch_message_id,
@@ -98,6 +99,7 @@ class PubSub:
                         )
             except Exception as e:
                 import traceback
+
                 traceback.print_exc()
 
                 logging.error(f"Error processing project with error: {e}")
