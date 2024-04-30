@@ -7,6 +7,7 @@ from typing import Callable
 
 from google.cloud import pubsub_v1
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -14,17 +15,18 @@ logging.basicConfig(
 
 
 class PubSub:
-    def __init__(self, credentials: str, project: str):
+    def __init__(self, credentials: str, project_name: str):
         self.publisher = pubsub_v1.PublisherClient.from_service_account_info(
             info=credentials,
         )
         self.subscriber = pubsub_v1.SubscriberClient.from_service_account_info(
             info=credentials,
         )
-        self.project = project
+        self.project_name = project_name
 
     def send_message(self, topic_name: str, data: dict):
-        topic_path = self.publisher.topic_path(self.project, topic_name)
+        topic_path = self.publisher.topic_path(self.project_name, topic_name)
+
         self.publisher.publish(
             topic_path,
             json.dumps(
@@ -56,7 +58,7 @@ class PubSub:
         default_timeout_for_any_message: int = 6 * 60,
     ):
         subscription_path = self.subscriber.subscription_path(
-            self.project,
+            self.project_name,
             f"{topic_name}-sub",
         )
 
