@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 import time
@@ -6,7 +5,6 @@ import uuid
 from typing import Callable
 
 from google.cloud import pubsub_v1
-
 
 logging.basicConfig(
     level=logging.INFO,
@@ -76,7 +74,7 @@ class PubSub:
 
                 if not response.received_messages:
                     logging.error(
-                        "Closing the subscription to the topic due to lack of messages"
+                        "Closing the subscription to the topic due to lack of messages"  # noqa: E501
                     )
                     break
                 else:
@@ -87,12 +85,10 @@ class PubSub:
                         message_data_json = json.loads(message_data)
                         batch_message_id = message_data_json["id"]
 
-                        # logging.info(f"Processing message ({batch_message_id})")
-
                         # Processing projects
                         callback(message_data)
 
-                        logging.info(f"Message ({batch_message_id}) processed.")
+                        logging.info(f"Message ({batch_message_id}) processed.")   # noqa: E501
                         time.sleep(time_to_wait_between_messages)
                         self.terminate_message(
                             ack_id=message_id,
