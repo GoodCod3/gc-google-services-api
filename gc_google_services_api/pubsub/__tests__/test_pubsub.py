@@ -66,22 +66,39 @@ class TestPubSub(unittest.TestCase):
             json.dumps(expected_data).encode("utf-8"),
         )
 
-    # @patch("gc_google_services_api.pubsub_v1")
-    # def test_terminate_message(self, mock_pubsub_v1):
-    #     # Arrange
-    #     pubsub = PubSub("credentials", "project")
-    #     ack_id = "test_ack_id"
-    #     message_id = "test_message_id"
-    #     subscription_path = "test_subscription_path"
+    @patch("gc_google_services_api.pubsub.uuid", new=uuid_mock())
+    @patch("gc_google_services_api.pubsub.pubsub_v1")
+    @patch("gc_google_services_api.pubsub.logging")
+    def test_terminate_message_execute_acknowledge_method_from_subscriber(
+        self,
+        mock_logging,
+        mock_pubsub_v1,
+    ):
+        mock_pubsub_v1 = create_pubsub_mock(mock_pubsub_v1)
+        ack_id="1"
+        message_id="2"
+        subscription_path="SUBSCRIPTION_PATH_TEST"
+        pubsub_instance = PubSub(self.credentials, self.project_name)
 
-    #     # Act
-    #     pubsub.terminate_message(ack_id, message_id, subscription_path)
+        # Assert
+        mock_pubsub_v1.SubscriberClient.from_service_account_info.assert_called_once_with(  # noqa: E501
+            info=self.credentials,
+        )
 
-    #     # Assert
-    #     mock_pubsub_v1.SubscriberClient().acknowledge.assert_called_once_with(
-    #         subscription=subscription_path,
-    #         ack_ids=[ack_id],
-    #     )
+        # Running send message
+        pubsub_instance.terminate_message(
+            ack_id=ack_id,
+            message_id=message_id,
+            subscription_path=subscription_path,
+        )
+
+        # Asserts
+        mock_pubsub_v1.SubscriberClient.from_service_account_info().acknowledge.assert_called_once_with(  # noqa: E501
+            subscription=subscription_path,
+            ack_ids=[ack_id]
+        )
+        mock_logging.info.assert_called_once_with(f"Terminating message: {message_id}")
+
 
     # @patch("gc_google_services_api.pubsub_v1")
     # def test_subscribe_topic(self, mock_pubsub_v1):
