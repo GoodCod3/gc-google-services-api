@@ -12,8 +12,33 @@ def create_pubsub_mock(mock_pubsub_v1):
     publisher_mock.topic_path.return_value = "TEST_TOPIC_RESPONSE"
     publisher_mock.publish.return_value = True
 
+    subscriber_mock = Mock()
+    subscriber_mock.subscription_path.return_value = "TEST_SUBSCRIPTION_PATH"
+    subscriber_mock.pull.side_effect = [
+        Mock(
+            received_messages=[
+                Mock(
+                    ack_id="1",
+                    message=Mock(
+                        data=json.dumps(
+                            {
+                                "projects": {"key": "value"},
+                                "id": UUID_TEST,
+                            }
+                        ).encode("utf-8")
+                    ),
+                )
+            ]
+        ),
+        Mock(received_messages=[]),
+    ]
+
     mock_pubsub_v1.PublisherClient.from_service_account_info.return_value = (
         publisher_mock
+    )
+
+    mock_pubsub_v1.SubscriberClient.from_service_account_info.return_value = (
+        subscriber_mock
     )
 
     return mock_pubsub_v1
@@ -96,43 +121,51 @@ class TestPubSub(unittest.TestCase):
         mock_pubsub_v1.SubscriberClient.from_service_account_info().acknowledge.assert_called_once_with(  # noqa: E501
             subscription=subscription_path, ack_ids=[ack_id]
         )
-        mock_logging.info.assert_called_once_with(f"Terminating message: {message_id}")  # noqa: E501
+        mock_logging.info.assert_called_once_with(
+            f"Terminating message: {message_id}"
+        )
 
-    # @patch("gc_google_services_api.pubsub_v1")
-    # def test_subscribe_topic(self, mock_pubsub_v1):
-    #     # Arrange
-    #     pubsub = PubSub("credentials", "project")
-    #     mock_response = MagicMock()
-    #     mock_response.received_messages = [
-    #         MagicMock(
-    #             ack_id="test_ack_id",
-    #             message=MagicMock(
-    #                 data=b'{"projects": {"key": "value"}, "id": "test_message_id"}'  # noqa: E501
-    #             ),
-    #         )
-    #     ]
-    #     mock_pubsub_v1.types.PullResponse.return_value = mock_response
+    @patch("gc_google_services_api.pubsub.uuid", new=uuid_mock())
+    @patch("gc_google_services_api.pubsub.pubsub_v1")
+    def test_subscribe_topic_receives_and_processes_messages(
+        self,
+        mock_pubsub_v1,
+    ):
+        mock_pubsub_v1 = create_pubsub_mock(mock_pubsub_v1)
+        callback_mock = Mock()
 
-    #     topic_name = "test_topic"
-    #     callback = MagicMock()
-    #     max_simultaneous_messages = 2
-    #     time_to_wait_between_messages = 5
-    #     default_timeout_for_any_message = 60
+        pubsub_instance = PubSub(self.credentials, self.project_name)
 
-    #     # Act
-    #     pubsub.subscribe_topic(
-    #         topic_name,
-    #         callback,
-    #         max_simultaneous_messages,
-    #         time_to_wait_between_messages,
-    #         default_timeout_for_any_message,
-    #     )
+        pubsub_instance.subscribe_topic(
+            self.topic_name,
+            callback=callback_mock,
+            max_simultaneous_messages=1,
+            time_to_wait_between_messages=0,
+            default_timeout_for_any_message=1,
+        )
 
-    #     # Assert
-    #     mock_pubsub_v1.SubscriberClient().pull.assert_called_once_with(
-    #         request=mock_pubsub_v1.types.PullRequest(
-    #             subscription=f"projects/{pubsub.project}/{topic_name}-sub",
-    #             max_messages=max_simultaneous_messages,
-    #         ),
-    #         timeout=default_timeout_for_any_message,
-    #     )
+        mock_pubsub_v1.SubscriberClient.from_service_account_info.assert_called_once_with(  # noqa: E501
+            info=self.credentials,
+        )
+
+        mock_pubsub_v1.SubscriberClient.from_service_account_info().subscription_path.assert_called_once_with(  # noqa: E501
+            self.project_name,
+            f"{self.topic_name}-sub",
+        )
+
+        mock_pubsub_v1.SubscriberClient.from_service_account_info().pull.assert_called_with(  # noqa: E501
+            request=mock_pubsub_v1.types.PullRequest(
+                subscription="TEST_SUBSCRIPTION_PATH",
+                max_messages=1,
+            ),
+            timeout=1,
+        )
+
+        callback_mock.assert_called_once_with(
+            json.dumps(
+                {
+                    "projects": {"key": "value"},
+                    "id": UUID_TEST,
+                }
+            ).encode("utf-8")
+        )
