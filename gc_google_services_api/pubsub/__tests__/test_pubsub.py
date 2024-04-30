@@ -75,9 +75,9 @@ class TestPubSub(unittest.TestCase):
         mock_pubsub_v1,
     ):
         mock_pubsub_v1 = create_pubsub_mock(mock_pubsub_v1)
-        ack_id="1"
-        message_id="2"
-        subscription_path="SUBSCRIPTION_PATH_TEST"
+        ack_id = "1"
+        message_id = "2"
+        subscription_path = "SUBSCRIPTION_PATH_TEST"
         pubsub_instance = PubSub(self.credentials, self.project_name)
 
         # Assert
@@ -94,11 +94,9 @@ class TestPubSub(unittest.TestCase):
 
         # Asserts
         mock_pubsub_v1.SubscriberClient.from_service_account_info().acknowledge.assert_called_once_with(  # noqa: E501
-            subscription=subscription_path,
-            ack_ids=[ack_id]
+            subscription=subscription_path, ack_ids=[ack_id]
         )
-        mock_logging.info.assert_called_once_with(f"Terminating message: {message_id}")
-
+        mock_logging.info.assert_called_once_with(f"Terminating message: {message_id}")  # noqa: E501
 
     # @patch("gc_google_services_api.pubsub_v1")
     # def test_subscribe_topic(self, mock_pubsub_v1):

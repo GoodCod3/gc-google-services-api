@@ -88,7 +88,9 @@ class PubSub:
                         # Processing projects
                         callback(message_data)
 
-                        logging.info(f"Message ({batch_message_id}) processed.")   # noqa: E501
+                        logging.info(
+                            f"Message ({batch_message_id}) processed."
+                        )  # noqa: E501
                         time.sleep(time_to_wait_between_messages)
                         self.terminate_message(
                             ack_id=message_id,
