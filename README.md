@@ -186,3 +186,83 @@ calendar_id = '1'
 event_id = '2'
 calendar_api.remove_event(calendar_id, event_id)
 ```
+
+## Pub/Sub
+This module allows us to send messages to a Pub/Sub topic, Subscribe to a Pub/Sub topic and execute a callback for each message and mark a message as finished so that Pub/Sub does not download it again
+
+### Initializing the PubSub Instance
+To use the PubSub class, you need to initialize an instance with the required credentials and project name:
+
+* **credentials**: This would be the JSON of the service account used to authenticate with the Pub/Sub service
+* **project_name**: It is the name of the project that appears in the Pub/Sub console
+
+### Methods
+
+* `send_message(topic_name, data)`
+Sends a message to a specified Pub/Sub topic.
+
+    * `topic_name` (str): Name of the Pub/Sub topic.
+    * `data` (dict): Data to be sent as the message payload.
+
+    Example
+    ```python
+    from gc_google_services_api.pubsub import PubSub
+
+
+    pubsub_instance = PubSub(credentials, project_name)
+
+    # To send a message into a Topic
+    pubsub_instance.send_message("TOPIC_NAME", payload)
+    ```
+
+
+* `terminate_message(ack_id, message_id, subscription_path)`
+Marks a message as processed and prevents it from being reprocessed.
+
+    * `ack_id` (str): Acknowledgment ID of the message.
+    * `message_id` (str): ID of the message.
+    * `subscription_path` (str): Path to the Pub/Sub subscription.
+    ```python
+    from gc_google_services_api.pubsub import PubSub
+
+
+    pubsub_instance = PubSub(credentials, project_name)
+
+    ack_id = "1"
+    message_id = "2"
+    subscription_path = "your_subscription_path"
+
+    pubsub_instance.terminate_message(ack_id, message_id, subscription_path)
+
+    ```
+
+* `subscribe_topic(topic_name, callback, max_simultaneous_messages=1, time_to_wait_between_messages=10, default_timeout_for_any_message=360)`
+Subscribes to a Pub/Sub topic and continuously listens for new messages.
+
+    * `topic_name` (str): Name of the Pub/Sub topic to subscribe to.
+    callback (callable): Callback function to be executed for each received message.
+    * `max_simultaneous_messages` (int): Maximum number of messages to process simultaneously.
+    * `time_to_wait_between_messages` (int): Time (in seconds) to wait between processing each message.
+    * `default_timeout_for_any_message` (int): Timeout (in seconds) for pulling any message from the subscription.
+
+    Example
+    ```python
+    from gc_google_services_api.pubsub import PubSub
+
+
+
+    def process_message(message_data):
+        print("Received message:", message_data)
+
+    pubsub_instance = PubSub(credentials, project_name)
+    topic_name = "test_topic"
+
+    pubsub_instance.subscribe_topic(
+        topic_name,
+        callback=process_message,
+        max_simultaneous_messages=1,
+        time_to_wait_between_messages=5,
+        default_timeout_for_any_message=600
+    )
+
+    ```
