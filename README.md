@@ -43,16 +43,36 @@ Here is a list of current support
 ## Big Query
 ----------------------------------
 
-### execute_query (Method):
-Allows you to run a query on a Big Query table.
-
 In order for the api to connect to the table, it is necessary to configure the environment variable `$GOOGLE_APPLICATION_CREDENTIALS` indicating the path of the file with the credentials (service account json file)
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/home/service_account_file.json
 ```
 
-### Usage example
+### BigQueryManager class:
+#### Usage example
+
+```python
+import os
+from gc_google_services_api.bigquery import BigQueryManager
+
+
+bigquery_project_id = os.getenv("BIGQUERY_PROJECT_ID")
+bigquery_dataset_id = os.getenv("BIGQUERY_DATASET_ID")
+
+bigquery_manager = BigQueryManager(
+    project_id=bigquery_project_id,
+    dataset_id=bigquery_dataset_id,
+)
+
+# Run the query
+result = bigquery_manager.execute_query("SELECT * FROM TABLE")
+```
+
+### execute_query (Deprecated Method):
+Allows you to run a query on a Big Query table.
+
+#### Usage example
 
 ```python
 from gc_google_services_api.bigquery import execute_query
