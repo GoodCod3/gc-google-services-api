@@ -50,6 +50,8 @@ export GOOGLE_APPLICATION_CREDENTIALS=/home/service_account_file.json
 ```
 
 ### BigQueryManager class:
+When we execute a query against Bigquery, we can have a response without Bigquery having processed the information, especially in `INSERT` or `UPDATE` queries. This class is responsible for returning a response only when Bigquery has actually finished processing the operation.
+
 #### Usage example
 
 ```python
@@ -66,8 +68,11 @@ bigquery_manager = BigQueryManager(
 )
 
 # Run the query
-result = bigquery_manager.execute_query("SELECT * FROM TABLE")
+result = bigquery_manager.execute_query(
+    f"SELECT * FROM `{bigquery_project_id}.{bigquery_dataset_id}.TABLE_NAME`"
+)
 ```
+To build the name of the table in the query we must concatenate 3 elements using the backtick quotes and in the following order: project_id, dataset_id and table_name
 
 ### execute_query (Deprecated Method):
 Allows you to run a query on a Big Query table.
