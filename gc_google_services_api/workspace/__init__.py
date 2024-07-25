@@ -4,7 +4,6 @@ import time
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -154,7 +153,7 @@ class WorkSpace:
     ):
         logging.info(
             f"Creating group {group_email} with {len(group_members)} members"
-        )
+        )  # noqa: E501
         response = None
         try:
             results = (

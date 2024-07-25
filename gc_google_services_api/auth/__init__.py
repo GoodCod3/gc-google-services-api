@@ -1,13 +1,14 @@
-import logging
 import base64
 import json
+import logging
 import os
+
+from google.oauth2 import service_account
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-from google.oauth2 import service_account
 
 CREDENTIALS_BASE64 = os.environ.get("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS", "")
 

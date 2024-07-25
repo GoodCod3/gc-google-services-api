@@ -103,7 +103,7 @@ class TestWorkSpace(unittest.TestCase):
 
         mock_execute = MagicMock()
         mock_service.members.return_value.delete.return_value.execute = (
-            mock_execute
+            mock_execute  # noqa: E501
         )
 
         result = workspace.delete_email_for_group(group_id, email_to_delete)
@@ -144,12 +144,12 @@ class TestWorkSpace(unittest.TestCase):
         workspace = WorkSpace(credentials, domain)
 
         mock_service.members.return_value.list.side_effect = (
-            execute_side_effect
+            execute_side_effect  # noqa: E501
         )
 
         result = workspace.find_groups_permission_for_email(
             groups, email_to_find
-        )
+        )  # noqa: E501
 
         expected_result = [
             {"group_id": "group1", "group_name": "Group 1"},
@@ -168,7 +168,7 @@ class TestWorkSpace(unittest.TestCase):
 
         mock_execute = MagicMock()
         mock_service.groups.return_value.get.return_value.execute = (
-            mock_execute
+            mock_execute  # noqa: E501
         )
 
         result = workspace.get_group_by_email(project_email)
@@ -241,13 +241,10 @@ class TestWorkSpace(unittest.TestCase):
             call(5),
             call(2),
         ]
-        
+
         self.assertTrue(
             mock_service.members.return_value.insert.call_args_list
-            == member_calls
+            == member_calls  # noqa: E501
         )
-        
-        self.assertTrue(
-            mock_time.sleep.call_args_list
-            == time_calls
-        )
+
+        self.assertTrue(mock_time.sleep.call_args_list == time_calls)

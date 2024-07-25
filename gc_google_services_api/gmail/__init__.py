@@ -1,5 +1,5 @@
-import logging
 import base64
+import logging
 import os
 from email.message import EmailMessage
 from email.mime.text import MIMEText
@@ -8,7 +8,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from gc_google_services_api.auth import Auth
-
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

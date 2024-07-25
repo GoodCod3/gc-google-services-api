@@ -4,7 +4,6 @@ import time
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -61,7 +60,9 @@ class Drive:
 
         next_page_token = results.get("nextPageToken", None)
         if next_page_token:
-            logging.info("Requesting shared drives ({})...".format(next_page_token))
+            logging.info(
+                "Requesting shared drives ({})...".format(next_page_token)
+            )  # noqa: E501
             drives += self.get_shared_drives(next_page_token)
 
         return drives
@@ -142,19 +143,21 @@ class Drive:
         else:
             success = isinstance(
                 permission_result, dict
-            ) and permission_result.get("id")
+            ) and permission_result.get(  # noqa: E501
+                "id"
+            )
             # We must wait a few seconds to add the permission.
             # It's a bug on Google API when use a Service account.
             logging.info(
                 "Waiting to add permissions to group into shared drive"
-            )
+            )  # noqa: E501
             time.sleep(5)
 
         return success
 
     def set_shared_drive_admin_permissions(
         self, drive_id: str, users: list
-    ) -> bool:
+    ) -> bool:  # noqa: E501
         success = True
         for user_email in users:
             permission_config = {
@@ -183,7 +186,9 @@ class Drive:
             else:
                 success = isinstance(
                     permission_result, dict
-                ) and permission_result.get("id")
+                ) and permission_result.get(  # noqa: E501
+                    "id"
+                )
                 # We must wait a few seconds to add the permissions.
                 # It's a bug on Google API when use a Service account.
                 logging.info(

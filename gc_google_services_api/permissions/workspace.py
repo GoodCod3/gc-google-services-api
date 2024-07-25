@@ -1,8 +1,8 @@
 import logging
+
 from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
-
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

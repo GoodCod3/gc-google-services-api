@@ -1,11 +1,10 @@
-import os
 import logging
+import os
 from urllib.error import HTTPError
 
 from apiclient import discovery
 
 from gc_google_services_api.auth import Auth
-
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
