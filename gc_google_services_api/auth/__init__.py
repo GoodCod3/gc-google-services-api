@@ -1,15 +1,21 @@
 import base64
 import json
+import logging
 import os
 
 from google.oauth2 import service_account
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 CREDENTIALS_BASE64 = os.environ.get("GOOGLE_SERVICE_ACCOUNT_CREDENTIALS", "")
 
 try:
     CREDENTIALS_CONTENT = json.loads(base64.b64decode(CREDENTIALS_BASE64))
 except json.JSONDecodeError as e:
-    print("[ERROR CREDENTIALS_CONTENT]: ", e)
+    logging.error("[ERROR CREDENTIALS_CONTENT]: ", e)
     CREDENTIALS_CONTENT = ""
 
 

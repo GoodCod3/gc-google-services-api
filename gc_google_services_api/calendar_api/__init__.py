@@ -111,7 +111,7 @@ class Calendar:
 
                         self.calendar_events[calendar_id].append(event)
                 except KeyError:
-                    print(event)
+                    pass
 
         nextPageToken = result.get("nextPageToken", None)
         if nextPageToken:

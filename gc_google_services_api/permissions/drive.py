@@ -1,8 +1,13 @@
+import logging
 import time
 
 from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -62,13 +67,15 @@ class Drive:
 
         next_page_token = results.get("nextPageToken", None)
         if next_page_token:
-            print("Requesting shared drives ({})...".format(next_page_token))
+            logging.info(
+                "Requesting shared drives ({})...".format(next_page_token)
+            )  # noqa: E501
             self.get_shared_drives(next_page_token)
 
     def find_email_in_permissions(self, email_to_delete):
         shared_drives = []
         for num, drive in enumerate(self.shared_drives):
-            print(
+            logging.info(
                 "Requesting permissions for file {}/{}".format(
                     num + 1, len(self.shared_drives)
                 )

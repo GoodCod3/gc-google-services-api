@@ -123,7 +123,7 @@ class TestPubSub(unittest.TestCase):
         )
         mock_logging.info.assert_called_once_with(
             f"Terminating message: {message_id}"
-        )
+        )  # noqa: E501
 
     @patch("gc_google_services_api.pubsub.uuid", new=uuid_mock())
     @patch("gc_google_services_api.pubsub.pubsub_v1")
