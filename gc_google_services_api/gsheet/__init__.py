@@ -1,9 +1,15 @@
 import os
+import logging
 from urllib.error import HTTPError
 
 from apiclient import discovery
 
 from gc_google_services_api.auth import Auth
+
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 API_NAME = "sheets"
 API_VERSION = "v4"
@@ -48,7 +54,7 @@ class GSheet(object):
 
             return spreadsheet.get("spreadsheetId")
         except HTTPError as error:
-            print(f"An error occurred: {error}")
+            logging.error(f"An error occurred: {error}")
 
             return error
 
@@ -68,6 +74,6 @@ class GSheet(object):
 
             return results
         except HTTPError as error:
-            print(f"An error occurred: {error}")
+            logging.error(f"An error occurred: {error}")
 
             return error

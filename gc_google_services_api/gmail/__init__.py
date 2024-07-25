@@ -1,5 +1,4 @@
-from __future__ import print_function
-
+import logging
 import base64
 import os
 from email.message import EmailMessage
@@ -9,6 +8,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from gc_google_services_api.auth import Auth
+
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 AUTHENTICATION_EMAIL = os.getenv("AUTHENTICATION_EMAIL", "")
 
@@ -54,7 +58,7 @@ class Gmail:
                 .execute()
             )
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            logging.error(f"An error occurred: {error}")
             send_message = None
 
         return send_message

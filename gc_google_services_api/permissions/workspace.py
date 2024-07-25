@@ -1,6 +1,12 @@
+import logging
 from googleapiclient.discovery import build
 
 from gc_google_services_api.auth import Auth
+
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 SCOPES = [
     "https://www.googleapis.com/auth/admin.directory.group",
@@ -51,7 +57,7 @@ class WorkSpace:
 
         next_page_token = results.get("nextPageToken", None)
         if next_page_token:
-            print("Requesting groups ({})...".format(next_page_token))
+            logging.info("Requesting groups ({})...".format(next_page_token))
             self.get_groups_by_email(email, next_page_token)
 
     def get_all_groups(self, next_page_token=None):
@@ -71,7 +77,7 @@ class WorkSpace:
 
         next_page_token = results.get("nextPageToken", None)
         if next_page_token:
-            print("Requesting groups ({})...".format(next_page_token))
+            logging.info("Requesting groups ({})...".format(next_page_token))
             self.get_all_groups(next_page_token)
 
     def get_members_from_group(self, group_key):
