@@ -1,5 +1,4 @@
 import logging
-import os
 from urllib.error import HTTPError
 
 from apiclient import discovery
@@ -12,7 +11,6 @@ logging.basicConfig(
 
 API_NAME = "sheets"
 API_VERSION = "v4"
-AUTHENTICATION_EMAIL = os.environ.get("AUTHENTICATION_EMAIL", "")
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 
