@@ -18,6 +18,7 @@ EMPTY_ARRAY = []
 # Members Roles
 OWNER_ROLE = "OWNER"
 MEMBER_ROLE = "MEMBER"
+MANAGER_ROLE = "MANAGER"
 
 
 class WorkSpace:
@@ -177,7 +178,7 @@ class WorkSpace:
                 admin_member_results = self.add_group_members(
                     group_id=results["id"],
                     members=group_admin_members,
-                    role=OWNER_ROLE,
+                    role=MANAGER_ROLE,
                 )
                 # We need to wait a few seconds to continue doing
                 # request to Google API.

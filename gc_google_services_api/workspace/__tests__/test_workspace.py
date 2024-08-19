@@ -219,7 +219,7 @@ class TestWorkSpace(unittest.TestCase):
                 body={
                     "email": "admin1@test.com",
                     "kind": "admin#directory#member",
-                    "role": "OWNER",
+                    "role": "MANAGER",
                     "status": "ACTIVE",
                     "type": "USER",
                 },
