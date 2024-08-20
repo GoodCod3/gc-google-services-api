@@ -62,7 +62,10 @@ class TestSuite(unittest.TestCase):
         subject_email = "TEST_SUBJECT_EMAIL@test.com"
 
         response = Gmail(subject_email).send_email(
-            "test message", "test@test.com", "totest@test.com"
+            email_message="test message",
+            email_subject="test@test.com", 
+            from_email="fromtest@test.com",
+            to="totest@test.com",
         )
 
         service_account.Credentials.from_service_account_info.assert_called_once_with(  # noqa: E501
@@ -72,7 +75,7 @@ class TestSuite(unittest.TestCase):
         build().users().messages().send.assert_called_once_with(
             userId="me",
             body={
-                "raw": "Q29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PSJ1dGYtOCIKQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogN2JpdApNSU1FLVZlcnNpb246IDEuMAp0bzogdG90ZXN0QHRlc3QuY29tCmZyb206CnN1YmplY3Q6IHRlc3RAdGVzdC5jb20KCnRlc3QgbWVzc2FnZQo="  # noqa: E501
+                "raw": "Q29udGVudC1UeXBlOiB0ZXh0L3BsYWluOyBjaGFyc2V0PSJ1dGYtOCIKQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogN2JpdApNSU1FLVZlcnNpb246IDEuMAp0bzogdG90ZXN0QHRlc3QuY29tCmZyb206IGZyb210ZXN0QHRlc3QuY29tCnN1YmplY3Q6IHRlc3RAdGVzdC5jb20KCnRlc3QgbWVzc2FnZQo="  # noqa: E501
             },
         )
         build().users().messages().send().execute.assert_called_once_with()

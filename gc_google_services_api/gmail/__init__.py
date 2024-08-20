@@ -1,6 +1,5 @@
 import base64
 import logging
-import os
 from email.message import EmailMessage
 from email.mime.text import MIMEText
 
@@ -13,8 +12,6 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-AUTHENTICATION_EMAIL = os.getenv("AUTHENTICATION_EMAIL", "")
-
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.send",
 ]
@@ -26,7 +23,7 @@ class Gmail:
         self.credentials = Auth(SCOPES, subject_email).get_credentials()
         self.service = build("gmail", "v1", credentials=self.credentials)
 
-    def send_email(self, email_message, email_subject, to=[]):
+    def send_email(self, email_message, email_subject, from_email, to=[]):
         def _create_message():
             if self.message_type == "raw":
                 message = EmailMessage()
@@ -36,7 +33,7 @@ class Gmail:
                 message = MIMEText(email_message, "html")
 
             message["to"] = to
-            message["from"] = AUTHENTICATION_EMAIL
+            message["from"] = from_email
             message["subject"] = email_subject
 
             return message
