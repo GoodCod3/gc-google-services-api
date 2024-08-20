@@ -63,7 +63,7 @@ class TestSuite(unittest.TestCase):
 
         response = Gmail(subject_email).send_email(
             email_message="test message",
-            email_subject="test@test.com", 
+            email_subject="test@test.com",
             from_email="fromtest@test.com",
             to="totest@test.com",
         )
