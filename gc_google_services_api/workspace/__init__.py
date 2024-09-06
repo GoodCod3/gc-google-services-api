@@ -151,17 +151,18 @@ class WorkSpace:
         group_email: str,
         group_members: list,
         group_admin_members: list,
+        group_name=None,
     ):
         logging.info(
             f"Creating group {group_email} with {len(group_members)} members"
-        )  # noqa: E501
+        )
         response = None
         try:
             results = (
                 self.service.groups()
                 .insert(
                     body={
-                        "name": group_email,
+                        "name": group_name if group_name else group_email,
                         "email": group_email,
                     },
                 )
