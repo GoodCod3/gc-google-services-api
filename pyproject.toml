@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gc-google-services-api"
-version = "2.1.0"
+version = "2.2.0"
 description = "Collection of libraries to connect with Google APIs."
 authors = ["Jonathan Rodríguez Alejos <jrodriguez.5716@gmail.com>"]
 readme = "README.md"
