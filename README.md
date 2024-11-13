@@ -89,6 +89,66 @@ users = execute_query(query)
 for user in users:
     print(user)
 ```
+### Creating Bigquery table
+We can use the `create_table_if_not_exists` method to create a Bigquery table with a specified schema.
+
+#### Usage example
+
+```python
+import os
+from gc_google_services_api.bigquery import BigQueryManager
+
+
+bigquery_project_id = os.getenv("BIGQUERY_PROJECT_ID")
+bigquery_dataset_id = os.getenv("BIGQUERY_DATASET_ID")
+
+bigquery_manager = BigQueryManager(
+    project_id=bigquery_project_id,
+    dataset_id=bigquery_dataset_id,
+)
+
+# Creating Bigqueyr table
+table_name = "table_name_test"
+table_schema = {
+    "FIELD_NAME": "FIELD_TYPE (STRING | BOOLEAN | DATE | etc...)"
+}
+
+result = bigquery_manager.create_table_if_not_exists(table_name, table_schema)
+```
+### Inserting massive data into a table
+We can insert a data list of dictionaries directly into a BigQuery table using the `load_massive_data` method.
+
+#### Usage example
+
+```python
+import os
+from gc_google_services_api.bigquery import BigQueryManager
+
+
+bigquery_project_id = os.getenv("BIGQUERY_PROJECT_ID")
+bigquery_dataset_id = os.getenv("BIGQUERY_DATASET_ID")
+
+bigquery_manager = BigQueryManager(
+    project_id=bigquery_project_id,
+    dataset_id=bigquery_dataset_id,
+)
+
+# Creating Bigqueyr table
+table_name = "table_name_test"
+table_data = [
+    {
+        "FIELD_NAME1": "test data",
+        "FIELD_NAME2": "test data",
+    },
+    {
+        "FIELD_NAME1": "test data2",
+        "FIELD_NAME2": "test data2",
+    }
+    ...
+]
+
+result = bigquery_manager.load_massive_data(table_data, table_name)
+```
 
 ## Google sheet
 ----------------------------------
