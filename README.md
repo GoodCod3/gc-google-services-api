@@ -1,5 +1,15 @@
 [![Publish to PyPI.org](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml/badge.svg)](https://github.com/GoodCod3/gc-google-services-api/actions/workflows/pr.yml)
 
+# How to install
+```bash
+poetry add gc-google-services-api
+```
+
+or 
+```bash
+pip install gc-google-services-api
+```
+
 # How to contribute
 After clone repository
 ## 1.- Install dependencies
