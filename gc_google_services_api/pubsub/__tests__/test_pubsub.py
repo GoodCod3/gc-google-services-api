@@ -79,7 +79,7 @@ class TestPubSub(unittest.TestCase):
 
         # Asserts
         expected_topic_path = "TEST_TOPIC_RESPONSE"
-        expected_data = {"projects": data, "id": UUID_TEST}
+        expected_data = {"data": data, "id": UUID_TEST}
 
         mock_pubsub_v1.PublisherClient.from_service_account_info().topic_path.assert_called_once_with(  # noqa: E501
             self.project_name,

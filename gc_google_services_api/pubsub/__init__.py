@@ -29,7 +29,7 @@ class PubSub:
             topic_path,
             json.dumps(
                 {
-                    "projects": data,
+                    "data": data,
                     "id": str(uuid.uuid4()),
                 }
             ).encode("utf-8"),
