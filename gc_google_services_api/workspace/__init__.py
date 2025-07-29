@@ -19,7 +19,8 @@ EMPTY_ARRAY = []
 OWNER_ROLE = "OWNER"
 MEMBER_ROLE = "MEMBER"
 MANAGER_ROLE = "MANAGER"
-
+MAX_RETRIES = 5
+BASE_DELAY = 2.0  # seconds for exponential backoff
 
 class WorkSpace:
     """
@@ -202,29 +203,47 @@ class WorkSpace:
 
     def add_group_members(self, group_id: str, members: list, role: str):
         members_data = []
+        failed_members = []
 
         for member in members:
-            try:
-                result = (
-                    self.service.members()
-                    .insert(
-                        groupKey=group_id,
-                        body={
-                            "email": member,
-                            "kind": "admin#directory#member",
-                            "role": role,
-                            "status": "ACTIVE",
-                            "type": "USER",
-                        },
+            success = False
+            retries = 0
+
+            while not success and retries < MAX_RETRIES:
+                try:
+                    result = (
+                        self.service.members()
+                        .insert(
+                            groupKey=group_id,
+                            body={
+                                "email": member,
+                                "kind": "admin#directory#member",
+                                "role": role,
+                                "status": "ACTIVE",
+                                "type": "USER",
+                            },
+                        )
+                        .execute()
                     )
-                    .execute()
-                )
-            except HttpError as e:
+                    members_data.append(result)
+                    success = True
+                except HttpError as e:
+                    retries += 1
+                    wait_time = BASE_DELAY * (2 ** (retries - 1))
+                    logging.warning(
+                        f"[WARNING - Workspace:add_group_members] Attempt {retries}/{MAX_RETRIES} failed to add member {member} to group {group_id}: {e}. Retrying in {wait_time:.1f} seconds..."
+                    )
+                    time.sleep(wait_time)
+
+            if not success:
                 logging.error(
-                    f"[ERROR - Workspace:add_group_members]: Cannot add member in group {group_id}: {e}"  # noqa: E501
+                    f"[ERROR - Workspace:add_group_members] Could not add member {member} to group {group_id} after {MAX_RETRIES} attempts."
                 )
-            else:
-                members_data.append(result)
-                time.sleep(2)
+                failed_members.append(member)
+
+        if failed_members:
+            logging.warning(
+                f"[WARNING - Workspace:add_group_members] The following members could not be added to group {group_id}: {failed_members}"
+            )
 
         return members_data
