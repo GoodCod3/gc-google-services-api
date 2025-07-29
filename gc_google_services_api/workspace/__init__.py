@@ -22,6 +22,7 @@ MANAGER_ROLE = "MANAGER"
 MAX_RETRIES = 5
 BASE_DELAY = 2.0  # seconds for exponential backoff
 
+
 class WorkSpace:
     """
     Google API documentation:
@@ -231,19 +232,19 @@ class WorkSpace:
                     retries += 1
                     wait_time = BASE_DELAY * (2 ** (retries - 1))
                     logging.warning(
-                        f"[WARNING - Workspace:add_group_members] Attempt {retries}/{MAX_RETRIES} failed to add member {member} to group {group_id}: {e}. Retrying in {wait_time:.1f} seconds..."
+                        f"[WARNING - Workspace:add_group_members] Attempt {retries}/{MAX_RETRIES} failed to add member {member} to group {group_id}: {e}. Retrying in {wait_time:.1f} seconds..."  # noqa: E501
                     )
                     time.sleep(wait_time)
 
             if not success:
                 logging.error(
-                    f"[ERROR - Workspace:add_group_members] Could not add member {member} to group {group_id} after {MAX_RETRIES} attempts."
+                    f"[ERROR - Workspace:add_group_members] Could not add member {member} to group {group_id} after {MAX_RETRIES} attempts."  # noqa: E501
                 )
                 failed_members.append(member)
 
         if failed_members:
             logging.warning(
-                f"[WARNING - Workspace:add_group_members] The following members could not be added to group {group_id}: {failed_members}"
+                f"[WARNING - Workspace:add_group_members] The following members could not be added to group {group_id}: {failed_members}"  # noqa: E501
             )
 
         return members_data
