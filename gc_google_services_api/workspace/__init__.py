@@ -235,6 +235,8 @@ class WorkSpace:
                         f"[WARNING - Workspace:add_group_members] Attempt {retries}/{MAX_RETRIES} failed to add member {member} to group {group_id}: {e}. Retrying in {wait_time:.1f} seconds..."  # noqa: E501
                     )
                     time.sleep(wait_time)
+                else:
+                    time.sleep(2)
 
             if not success:
                 logging.error(
