@@ -111,6 +111,42 @@ class Drive:
 
         return shared_drive
 
+    def create_folder_structure(self,
+                                drive_id: str,
+                                folder_structure: dict
+                                ) -> bool:
+        success = True
+        for folder_name, subfolders in folder_structure.items():
+            folder_metadata = {
+                "name": folder_name,
+                "mimeType": "application/vnd.google-apps.folder",
+                "parents": [drive_id],
+            }
+            try:
+                folder = (
+                    self.service.files()
+                    .create(
+                        body=folder_metadata,
+                        supportsAllDrives=True,
+                        fields="id",
+                    )
+                    .execute()
+                )
+            except HttpError as e:
+                logging.error(
+                    f"Error creating folder {folder_name} in shared drive {drive_id} - {e}"  # noqa: E501
+                )
+                success = False
+            else:
+                folder_id = folder.get("id")
+                if subfolders:
+                    subfolder_success = self.create_folder_structure(
+                        folder_id, subfolders
+                    )
+                    success = success and subfolder_success
+
+        return success
+
     def set_group_in_shared_drive_permissions(
         self,
         drive_id: str,
