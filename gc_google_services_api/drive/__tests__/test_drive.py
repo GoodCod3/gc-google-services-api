@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
+from googleapiclient.errors import HttpError
+
 from gc_google_services_api.drive import Drive
 
 
@@ -103,3 +105,26 @@ class TestDrive(unittest.TestCase):
         self.assertEqual(
             self.mock_service.files().create.call_count, 4
         )
+
+    def test_create_folder_structure_handles_http_error(self):
+        parent_id = "parent_folder_id"
+        folder_structure = {"Folder1": {}}
+
+        exception = HttpError(
+            resp=MagicMock(status=403),
+            content=b"Forbidden",
+        )
+        self.mock_service.files().create().execute.side_effect = exception
+
+        with self.assertLogs(level="ERROR") as log:
+            success = self.drive.create_folder_structure(
+                parent_id, folder_structure
+            )
+            self.assertIn(
+                "ERROR:root:Error creating folder Folder1 in shared drive parent_folder_id - ",  # noqa: E501
+                log.output[0]
+            )
+
+        self.assertIsInstance(success, bool)
+        self.assertFalse(success)
+        self.drive.service.files().create().execute.assert_called_once()
