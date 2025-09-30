@@ -111,9 +111,14 @@ class Drive:
 
         return shared_drive
 
-    def copy_drive_folder_contents(self, source_folder_id, destination_folder_id):
+    def copy_drive_folder_contents(
+            self,
+            source_folder_id,
+            destination_folder_id
+    ):
         """
-        Recursively copies all files and subfolders from a source folder to a destination folder.
+        Recursively copies all files and subfolders from a source folder to
+        a destination folder.
         """
         page_token = None
         while True:
@@ -139,7 +144,10 @@ class Drive:
                             'mimeType': 'application/vnd.google-apps.folder',
                             'parents': [destination_folder_id]
                         }
-                        new_folder = self.service.files().create(body=folder_metadata, fields='id').execute()
+                        new_folder = self.service.files().create(
+                            body=folder_metadata,
+                            fields='id'
+                        ).execute()
                         new_folder_id = new_folder.get('id')
 
                         # Recursively copy the contents of the subfolder
