@@ -144,10 +144,10 @@ class Drive:
                             'mimeType': 'application/vnd.google-apps.folder',
                             'parents': [destination_folder_id]
                         }
-                        new_folder = self.service.files().create(
+                        new_folder = self.create_file_in_drive(
                             body=folder_metadata,
                             fields='id'
-                        ).execute()
+                        )
                         new_folder_id = new_folder.get('id')
 
                         # Recursively copy the contents of the subfolder
@@ -171,6 +171,12 @@ class Drive:
                 logging.error(f"An error occurred: {error}")
                 return False
         return True
+
+    def create_file_in_drive(self, body, fields=None):
+        return self.service.files().create(
+            body=body,
+            fields=fields
+        ).execute()
 
     def set_group_in_shared_drive_permissions(
         self,
