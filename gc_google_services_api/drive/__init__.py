@@ -124,13 +124,13 @@ class Drive:
         while True:
             try:
                 # List files and folders in the source folder
-                response = self.service.files().list(
-                    q=f"'{source_folder_id}' in parents",
+                response = self.list_files_in_drive(
+                    query=f"'{source_folder_id}' in parents",
                     fields="nextPageToken, files(id, name, mimeType)",
-                    pageToken=page_token,
-                    includeItemsFromAllDrives=True,
-                    supportsAllDrives=True,
-                ).execute()
+                    page_token=page_token,
+                    include_items_from_all_drives=True,
+                    supports_all_drives=True
+                )
 
                 for item in response.get('files', []):
                     item_id = item.get('id')
@@ -176,6 +176,22 @@ class Drive:
         return self.service.files().create(
             body=body,
             fields=fields
+        ).execute()
+
+    def list_files_in_drive(
+        self,
+        query=None,
+        fields=None,
+        page_token=None,
+        include_items_from_all_drives=False,
+        supports_all_drives=False
+    ):
+        return self.service.files().list(
+            q=query,
+            fields=fields,
+            pageToken=page_token,
+            includeItemsFromAllDrives=include_items_from_all_drives,
+            supportsAllDrives=supports_all_drives,
         ).execute()
 
     def set_group_in_shared_drive_permissions(
