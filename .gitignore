@@ -6,3 +6,4 @@ gc_google_services_api.egg-info
 __pycache__
 
 .vscode/
+.idea/

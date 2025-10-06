@@ -111,41 +111,88 @@ class Drive:
 
         return shared_drive
 
-    def create_folder_structure(self,
-                                drive_id: str,
-                                folder_structure: dict
-                                ) -> bool:
-        success = True
-        for folder_name, subfolders in folder_structure.items():
-            folder_metadata = {
-                "name": folder_name,
-                "mimeType": "application/vnd.google-apps.folder",
-                "parents": [drive_id],
-            }
+    def copy_drive_folder_contents(
+            self,
+            source_folder_id,
+            destination_folder_id
+    ):
+        """
+        Recursively copies all files and subfolders from a source folder to
+        a destination folder.
+        """
+        page_token = None
+        while True:
             try:
-                folder = (
-                    self.service.files()
-                    .create(
-                        body=folder_metadata,
-                        supportsAllDrives=True,
-                        fields="id",
-                    )
-                    .execute()
+                # List files and folders in the source folder
+                response = self.list_files_in_drive(
+                    query=f"'{source_folder_id}' in parents",
+                    fields="nextPageToken, files(id, name, mimeType)",
+                    page_token=page_token,
+                    include_items_from_all_drives=True,
+                    supports_all_drives=True
                 )
-            except HttpError as e:
-                logging.error(
-                    f"Error creating folder {folder_name} in shared drive {drive_id} - {e}"  # noqa: E501
-                )
-                success = False
-            else:
-                folder_id = folder.get("id")
-                if subfolders:
-                    subfolder_success = self.create_folder_structure(
-                        folder_id, subfolders
-                    )
-                    success = success and subfolder_success
 
-        return success
+                for item in response.get('files', []):
+                    item_id = item.get('id')
+                    item_name = item.get('name')
+                    item_mime_type = item.get('mimeType')
+
+                    if item_mime_type == 'application/vnd.google-apps.folder':
+                        # It's a subfolder, create it in the destination
+                        folder_metadata = {
+                            'name': item_name,
+                            'mimeType': 'application/vnd.google-apps.folder',
+                            'parents': [destination_folder_id]
+                        }
+                        new_folder = self.create_file_in_drive(
+                            body=folder_metadata,
+                            fields='id'
+                        )
+                        new_folder_id = new_folder.get('id')
+
+                        # Recursively copy the contents of the subfolder
+                        self.copy_drive_folder_contents(item_id, new_folder_id)
+                    else:
+                        # It's a file, copy it to the destination
+                        file_metadata = {
+                            'name': item_name,
+                            'parents': [destination_folder_id]
+                        }
+                        self.service.files().copy(
+                            fileId=item_id,
+                            body=file_metadata,
+                            supportsAllDrives=True
+                        ).execute()
+
+                page_token = response.get('nextPageToken', None)
+                if page_token is None:
+                    break
+            except HttpError as error:
+                logging.error(f"An error occurred: {error}")
+                return False
+        return True
+
+    def create_file_in_drive(self, body, fields=None):
+        return self.service.files().create(
+            body=body,
+            fields=fields
+        ).execute()
+
+    def list_files_in_drive(
+        self,
+        query=None,
+        fields=None,
+        page_token=None,
+        include_items_from_all_drives=False,
+        supports_all_drives=False
+    ):
+        return self.service.files().list(
+            q=query,
+            fields=fields,
+            pageToken=page_token,
+            includeItemsFromAllDrives=include_items_from_all_drives,
+            supportsAllDrives=supports_all_drives,
+        ).execute()
 
     def set_group_in_shared_drive_permissions(
         self,

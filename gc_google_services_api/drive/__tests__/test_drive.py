@@ -87,19 +87,3 @@ class TestDrive(unittest.TestCase):
             drive_id, users
         )  # noqa: E501
         self.assertTrue(success)
-
-    def test_create_folder_structure(self):
-        parent_id = "parent_folder_id"
-        folder_structure = {
-            "Folder1": {},
-            "Folder2": {"Subfolder1": {}, "Subfolder2": {}},
-        }
-
-        success = self.drive.create_folder_structure(
-            parent_id, folder_structure
-        )
-
-        self.assertTrue(success)
-        self.assertEqual(
-            self.mock_service.files().create.call_count, 4
-        )
