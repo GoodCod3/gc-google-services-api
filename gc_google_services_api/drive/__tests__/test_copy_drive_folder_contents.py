@@ -73,7 +73,8 @@ class TestCopyDriveFolderContents(unittest.TestCase):
                 'mimeType': 'application/vnd.google-apps.folder',
                 'parents': [destination_folder_id]
             },
-            fields='id'
+            fields='id',
+            supportsAllDrives=True
         )
 
         # Verify file copy was called
@@ -151,7 +152,8 @@ class TestCopyDriveFolderContents(unittest.TestCase):
                 'mimeType': 'application/vnd.google-apps.folder',
                 'parents': [destination_folder_id]
             },
-            fields='id'
+            fields='id',
+            supportsAllDrives=True
         )
 
         # Verify file copy was called for the nested file

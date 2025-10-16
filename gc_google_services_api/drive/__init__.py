@@ -146,7 +146,8 @@ class Drive:
                         }
                         new_folder = self.create_file_in_drive(
                             body=folder_metadata,
-                            fields='id'
+                            fields='id',
+                            supports_all_drives=True
                         )
                         new_folder_id = new_folder.get('id')
 
@@ -172,10 +173,16 @@ class Drive:
                 return False
         return True
 
-    def create_file_in_drive(self, body, fields=None):
+    def create_file_in_drive(
+            self,
+            body,
+            fields=None,
+            supports_all_drives=False
+    ):
         return self.service.files().create(
             body=body,
-            fields=fields
+            fields=fields,
+            supportsAllDrives=supports_all_drives,
         ).execute()
 
     def list_files_in_drive(
