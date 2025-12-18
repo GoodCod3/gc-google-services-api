@@ -10,7 +10,7 @@ packages = [{include = "gc_google_services_api"}]
 python = "^3.8.1"
 google-api-python-client = "^2.80.0"
 google-cloud-bigquery = "^3.6.0"
-google-cloud-pubsub = "^2.21.1"
+google-cloud-pubsub = "^2.34.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"

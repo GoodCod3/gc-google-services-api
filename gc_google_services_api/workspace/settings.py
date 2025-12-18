@@ -1,6 +1,5 @@
 from googleapiclient.discovery import build
 
-
 SCOPES = [
     "https://www.googleapis.com/auth/apps.groups.settings",
 ]

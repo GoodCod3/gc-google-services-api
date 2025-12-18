@@ -77,9 +77,11 @@ class Calendar:
                 calendarId=calendar_id,
                 pageToken=pageToken,
                 showDeleted=False,
-                timeMin=self.minDate.strftime(DEFAULT_MIN_DATE_TIME_FORMAT)
-                if self.minDate
-                else None,
+                timeMin=(
+                    self.minDate.strftime(DEFAULT_MIN_DATE_TIME_FORMAT)
+                    if self.minDate
+                    else None
+                ),
             )
             .execute()
         )
