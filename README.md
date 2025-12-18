@@ -5,7 +5,7 @@
 poetry add gc-google-services-api
 ```
 
-or 
+or
 ```bash
 pip install gc-google-services-api
 ```
