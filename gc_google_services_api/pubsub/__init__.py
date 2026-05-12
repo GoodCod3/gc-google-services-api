@@ -25,7 +25,7 @@ class PubSub:
     def send_message(self, topic_name: str, data: dict):
         topic_path = self.publisher.topic_path(self.project_name, topic_name)
 
-        self.publisher.publish(
+        result = self.publisher.publish(
             topic_path,
             json.dumps(
                 {
@@ -34,6 +34,8 @@ class PubSub:
                 }
             ).encode("utf-8"),
         )
+
+        return result
 
     def terminate_message(
         self,
